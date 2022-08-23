@@ -1,0 +1,96 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+
+        <!-- CSS -->
+<!--        <link rel="stylesheet" href="../css/home.css">
+        <link rel="stylesheet" href="../css/about.css">
+        <link rel="stylesheet" href="../css/products.css">
+        <link rel="stylesheet" href="../css/productspecific.css"> -->
+        <!-- Fonts Awesome CSS -->
+ <!--       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+        <!-- Fonts -->
+<!--        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">  -->
+        <!-- Mapbox -->
+<!--        <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />   -->
+        <!-- Mapbox End -->
+<!--    <title>foodlo</title>
+</head>
+<body> -->
+        <!-- Hamburger -->
+<!--        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../images/foodlo Logo/logo1.png" alt="" class="logo">
+                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <ul class="links">
+                <li><a href="../html/home.html">Home</a></li>
+                <li><a href="../html/about.html">About</a></li>
+                <li><a href="../html/home.html#gallery">Gallery</a></li>
+                <li><a href="../html/products.html">Order Now</a></li>
+            </ul>
+            <div class="cart-btn-wrapper">
+                <a href="" class="cart">Cart <i class="fas fa-shopping-cart"></i></a>
+                <a href="" class="login">Login <i class="fa-solid fa-user-plus"></i></a>
+            </div>
+        </aside>
+    
+        <button class="back-to-top hidden"><i class="fa-solid fa-circle-arrow-up"></i></button>
+
+        <section class="aboutHero">
+            <div class="aboutHeroText">
+                <h1><a href="../html/home.html">Home</a> / <a href="./products.html">Products</a> / Zinger Burger </h1>
+            </div>
+        </section>
+-->
+        <!-- Product Specific Page -->
+{% block body %}
+        <section class="productSpecific">
+            <div class="psContainer">
+                <div class="leftpsgridchild">
+                    <img id="firstImg" src="{{ product.foodimg.url }}" alt="">
+                </div>
+                <div class="rightpsgridchild">
+                    <h1 id="productName">{{ product.foodname }}</h1>
+                    <p id="productDesc"><span>Description:</span><!-- Sizzling zinger patty topped on with melted cheese, lettuce, tomatoes, pickles, onions, ketchup and mustard on a sesame seed bun.--> {{ product.fooddesc }}   </p>
+                    <h2 id="productPrice">$<!--10.99-->{{ product.price }}</h2>
+                    <div class="psbtnwrapper">
+                                    
+                    {% if already_in_cart %}
+
+                    <a  href= "{% url 'cart' %}"><button class="psbtn"  id="addToCart">Go To Cart <i class="fa-solid fa-bag-shopping"></i></button></a>
+
+                    {% else %}
+                      <form action='/addtocart'>
+                        <input type="hidden" value= {{ product.id }} name="prod_id" >
+                        <button class="psbtn" type="submit"  id="addToCart">Add To Cart <i class="fa-solid fa-bag-shopping"></i></button>
+                      <!--  <button class="psbtn" id="buyNow">Buy Now <i class="fa-solid fa-money-bill-wave"></i></button> -->
+                      </form>
+
+                    {% endif %}
+
+                     
+                      <!--<button class="psbtn"  id="addToCart">Add To Cart <i class="fa-solid fa-bag-shopping"></i></button>-->
+                        <!--<button class="psbtn" id="buyNow">Buy Now <i class="fa-solid fa-money-bill-wave"></i></button>-->
+                    </div>
+                    <h5 id="prodCategory">Category:<!-- Burger -->{{ product.foodcategory }} </h5>
+                </div>
+            </div>
+        </section>
+
+{% endblock %}
+<!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/index.js"></script>
+</body>
+</html>  -->

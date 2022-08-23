@@ -1,0 +1,79 @@
+.rightcpheader {
+    margin-bottom: 1rem;
+    max-width: none;
+}
+
+.userorder {
+    display: flex;
+    flex-direction: column;
+    /* background-color: whitesmoke; */
+    border: 1px solid black;
+    padding: 1rem;
+    /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s; */
+    margin-bottom: 1rem;
+}
+
+.uoheader {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    border-bottom: 1px solid black;
+    margin-bottom: 1rem;
+}
+
+.uoproductcard {
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.uoproducttext p {
+    margin: 0;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.uoproductimage {
+    width: 10rem;
+    height: 14rem;
+}
+
+.uoproductimage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.uofooter {
+    text-align: end;
+    font-size: 1.5rem;
+    /* border-bottom: 1px solid black; */
+    /* padding-bottom: 1rem; */
+}
+
+.border {
+    height: 55rem;
+}
+
+@media(max-width:992px) {
+    .changePassword {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .border {
+        display: flex;
+        flex-direction: column;
+        border: none;
+        height: fit-content;
+        align-items: center;
+    }
+    .rightcp {
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+    }
+}

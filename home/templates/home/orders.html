@@ -1,0 +1,46 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<section class="changePassword">
+        <div class="leftcp">
+            <div class="border">
+                <p>Thanks {{user}}</p>
+                <button>Orders</button>
+            </div>
+        </div>
+        <div class="rightcp">
+            <p class="rightcpheader">
+                Orders
+            </p>
+            <section class="userorder">
+                <div class="uoheader">
+                    <p class="orderNumber">Order Id: {{ orderid }}</p>
+                    <p class="orderStatus">Status: {{status}}</p>
+                </div>
+              
+                <div class="uoproducts">
+                  
+                  {% for prod in incheckout %}  
+                  <div class="uoproductcard">
+                        <div class="uoproductimage">
+                            <img src="{{ prod.items.foodimg.url }}" alt="">
+                        </div>
+                        <div class="uoproducttext">
+                            <p class="uoprodname">Product: {{ prod.items.foodname}} </p>
+                            <p class="uoprodqty">Quantity: {{ prod.quantity }}</p>
+                            <p class="uoprice">Price: ${{ prod.items.price }}</p>
+                        </div>
+                    </div>
+                  
+                  {% endfor %}
+                </div>
+              
+                <div class="uofooter">
+                    Order Amount: ${{total_price}}
+                </div>
+            </section>
+        </div>
+    </section>
+    {% endblock %}

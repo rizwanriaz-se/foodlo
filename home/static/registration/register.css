@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+
+.registerForm {
+    background-color: #e7d3d3;
+    width: 100%;
+    height: 70rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registerFormContainer {
+    display: flex;
+    flex-direction: column;
+    height: 50rem;
+    width: 30rem;
+    border-radius: 1.5rem;
+    background-color: white;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    padding: 3rem;
+}
+
+#formHeading {
+    width: 75%;
+    /* text-align: center; */
+}
+
+#formHeading span {
+    border-bottom: 3px solid rgb(126, 77, 47);
+}
+
+.input-field {
+    border: none;
+    border-bottom: 2px solid black;
+    background-color: transparent;
+    outline: none;
+    margin: 1.5rem auto;
+    width: 100%;
+    display: flex;
+    padding: 0.3rem;
+}
+
+.input-field:focus {
+    color: #e7d3d3;
+}
+
+.input-field input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input-field:is(:valid) {
+    border-bottom: 2px solid #e7d3d3;
+}
+
+.fa-user, .fa-envelope, .fa-lock {
+    margin-right: 0.5rem;
+}
+
+.checkbox {
+    width: 100%;
+    margin-bottom: 2rem ;
+    margin-top: 1rem;
+}
+
+.cblabel {
+    font-size: 1rem !important;
+}
+
+.registerFooter {
+    font-size: 1.3rem;
+}
+
+#termsCheckbox {
+    width: 3rem !important;
+    height: 1.5rem;
+}
+
+#registerNow {
+    height: 4rem;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 1rem 0;
+    background-color: #e7d3d3;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+#registerNow:hover {
+    filter: brightness(70%);
+    transition: 0.5s ease-in-out;
+}
+
+#loginLink {
+    text-align: center;
+}
+
+#loginLink a {
+    text-decoration: none;
+    color: rgb(126, 77, 47);
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+
+@media(max-width:400px) {
+    .registerFormContainer {
+        width: 25rem;
+        transition: 0.3s;
+    }
+}

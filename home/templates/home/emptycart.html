@@ -1,0 +1,16 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block body %}
+
+    <!-- Empty Cart Items -->
+
+    <section class="emptyCart">
+        <div class="emptyCartContainer">
+            <img class="emptyCartIcon" src="{% static 'home/images/icons8-favorite-cart-100.png' %}" alt="">
+            <p class="emptyCartText">Add something to make me happy :)</p>
+            <a class="continueBtn" href="/products">Continue Shopping</a>
+        </div>
+    </section>
+
+{% endblock %}

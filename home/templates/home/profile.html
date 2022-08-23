@@ -1,0 +1,29 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block body %}
+
+<section class="changePassword">
+        <div class="leftcp">
+            <div class="border">
+                <p>Welcome {{user}}</p>
+                <button>Profile</button>
+            </div>
+        </div>
+        <div class="rightcp">
+            <p class="rightcpheader">Profile</p>
+            <p class="profileDetails"><span>Username:</span> {{user}}</p>
+            <p class="profileDetails"><span>Email:</span> {{user.email}}</p>
+            <p class="profileDetails"><span>Date Joined:</span> {{user.date_joined}}</p>
+        </div>
+</section>
+
+
+
+
+
+
+
+
+
+{% endblock %}

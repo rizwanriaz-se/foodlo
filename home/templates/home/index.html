@@ -1,0 +1,132 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+ <!-- Write code here -->
+<!-- Hero Section -->
+
+    <section class="hero">
+        <div class="hero-left">
+            <h1 class="hero-heading">Perfect Ambiance & <br> Best Quality Food</h1>
+            <p class="hero-para">Satisfy your cravings by getting the best quality food from and enjoy with your beloved ones. Customer satisfaction is our first priority. Come and have an experience like you've never had before.</p>
+            <a href="{% url 'products' %}" class="hero-btn">Order Now</a>
+        </div>
+        <div class="hero-right">
+            <img src="{% static 'home/images/heroImage.jpg'%}" alt="" class="hero-img" >
+        </div>
+    </section>
+
+    <!-- Featured Product Section -->
+
+    <section class="featured-products">
+        
+        <h1 class="fpHeading">Featur<span>ed Pr</span>oducts</h1>
+
+        <!-- card 1 -->
+        <div class="card card-1z">
+            <img src="{% static 'home/images/neapolitan-pizza.jpg' %}" alt="" class="center">
+            <div class="card-text">
+                <div class="imgName">Neapolitan Pizza</div>
+                <div class="imgPrice">$15</div>
+            </div>
+        </div>
+
+        <!-- card 2 -->
+        <div class="card card-2">
+            <img src="{% static 'home/images/pasta.png' %}" alt="" class="center">
+            <div class="card-text">
+                <div class="imgName">Alfredo Pasta</div>
+                <div class="imgPrice">$20</div>
+            </div>
+        </div>
+
+        <!-- card 3 -->
+
+        <div class="card card-3">
+            <img src="{% static 'home/images/milkshake.png'%}" alt="" class="center">
+            <div class="card-text">
+                <div class="imgName">Chocolate Milkshake</div>
+                <div class="imgPrice">$8</div>
+            </div>
+        </div>
+        <div class="btn-container">
+            <a href="{% url 'products' %}"  class="fpBtn">All Products</a>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <h1 class="galleryHeading">gallery</h1>
+        <div class="owl-carousel owl-theme">
+            <div class="item">
+                <img src="{% static 'home/images/img1.jpg'%}" alt="">
+            </div>
+            <div class="item">
+                <img src="{% static 'home/images/img2.jpg'%}" alt="">
+            </div>
+            <div class="item">
+                <img src="{% static 'home/images/img3.jpg'%}" alt="">
+            </div>
+            <div class="item">
+                <img src="{% static 'home/images/img4.jpg'%}" alt="">
+            </div>
+            <div class="item">
+                <img src="{% static 'home/images/img5.jpg'%}" alt="">
+            </div>
+            <div class="item">
+                <img src="{% static 'home/images/img6.jpg'%}" alt="">
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsLetter">
+        <!-- Newsletter left -->
+        <div class="newsLetterLeft">
+            <h1 class="newsLetterHeader">Join our newsletter and get 20% off</h1>
+            <p class="newsLetterPara">Subscribe to our newsletter and stay up to date on our latest releas+es and promotions.</p>
+        </div>
+        <!-- Newsletter right -->
+        
+        
+        <div class="newsLetterRight">
+            <i class="fa-solid fa-envelope newsLetterIcon"></i>        
+            <input type="email" name="subscribe" class="newsLetterInput" placeholder="Enter your email">
+           <!-- <a href="{% url 'sendmail' %}">--><button class="newsLetterBtn">Subscribe</button><!--</a><button class="newsLetterBtn">Subscribe</button>-->
+            <div class="emailSuccess"></div>
+        </div>
+         
+    </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript">
+        $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:true,
+    navSize:50,
+    dots:false,
+    autoplay:true,
+    autoplayTimeout:3000,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:4
+        }
+    }
+})
+</script>
+
+
+
+
+{% endblock %}

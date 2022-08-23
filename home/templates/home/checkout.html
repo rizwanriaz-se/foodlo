@@ -1,0 +1,120 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+
+<!-- Checkout Section -->
+
+        <p id="checkoutMainHeading">Checkout</p>
+
+        <section class="checkoutMain">
+            <div class="checkoutContainer">
+                <div class="checkoutForm">
+                    <div class="checkoutHeader">
+                        <p>Billing Details</p>
+                        <form method="post" id="userinfoform">
+                          {% csrf_token %}
+                          
+                          {% for field in form %}
+                          
+                          
+                      
+                          {{ field.label_tag }} {{field}}
+                          
+                          
+                          {% if messages %} 
+                          {% for message in messages %}
+                         <p style="color:green; font-size:15px;"> {{ message }} </p>
+                            {% endfor %}
+                        {% endif %}
+                          {% if field.errors %}<div style="color:red; font-size:10px;">{{field.errors}}</div>{%endif%}
+                          {% endfor %}
+                          
+    
+                            <!--<div class="nameContainer">
+                                <div class="firstNameContainer checkoutInputs">
+                                    <label for="firstName">Name *</label>
+                                    <input type="text" name="firstName" id="firstName" placeholder="First Name">
+                                </div>
+                                <div class="lastNameContainer checkoutInputs">
+                                    <label for="lastName">Last Name *</label>
+                                    <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="streetAddress checkoutInputs">
+                                <label for="streetAddress">Street Address *</label>
+                                <input type="text" name="streetAddress" id="streetAddress" placeholder="House Number and Street Name">
+                            </div>
+                            <div class="city checkoutInputs">
+                                <label for="city">Town/City *</label>
+                                <input type="text" name="city" id="city" placeholder="">
+                            </div>
+                            <div class="state checkoutInputs">
+                                <label for="state">State/County *</label>
+                                <input type="text" name="state" id="state">
+                            </div>
+                            <div class="postcode checkoutInputs">
+                                <label for="postalCode">Postcode/ZIP *</label>
+                                <input type="number" name="postalCode" id="postalCode">
+                            </div>
+                            <div class="phoneNumber checkoutInputs">
+                                <label for="phone">Phone *</label>
+                                <input type="number" name="phone" id="phone">
+                            </div>
+                            <div class="emailAddress checkoutInputs">
+                                <label for="email">Email *</label>
+                                <input type="email" name="email" id="email">
+                            </div> -->
+                        </form>
+                    </div>
+                </div>
+                <div class="orderSummary">
+                    <div class="orderSummaryHeader">
+                        <p>Your Order</p>
+                    </div>
+                    <section class="orderSummaryCard">
+                        <div class="orderSummaryCardHeader">
+                            <p>Product</p>
+                        </div>
+                      {% for val in incheckout %}
+                        <div class="orderSummaryProduct">
+                            <p class="ospName">{{val.items.foodname}}</p>
+                            <p class="ospQty"><span>x</span>{{val.quantity}}</p>
+                            <p class="ospPrice">${{val.items.price}}</p>
+                        </div>
+                      {% endfor %}
+                        <div class="orderItemSeperator"></div>
+                        <div class="orderItemSeperator"></div>
+                        <div class="osTotal">
+                            <p class="osTotalHeader">Total</p>
+                            <p class="osTotalPrice">${{total_price}}</p>
+                        </div>
+                        <div class="seperator"></div>
+                        <div class="paymentHeader">
+                            <p>Payment</p>
+                        </div>
+                        <div class="paymentOptions">
+                           <div class="cod">
+                               <input type="checkbox" name="cod" id="cod" checked onclick="this.checked=!this.checked;">
+                               <label for="cod">Cash On Delivery</label>
+                           </div> 
+                        </div>
+                        <!-- <div class="cardPayment-paypal">
+                            <button id="paypal"><i>Paypal</i></button>
+                            <button id="cardPayment"><i class="fa-regular fa-credit-card"></i>Debit Or Credit Card</button>
+                        </div> -->
+                        <div class="terms-conditions">
+                            <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
+                        </div>
+                        <div class="placeOrderBtn">
+                            <a href="{% url 'orders' %}"><button><input id="hiddenBtn" type="submit" form="userinfoform"> Place Order</button></a><!--<button>Place Order</button>-->
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+    {% endblock %}
+        

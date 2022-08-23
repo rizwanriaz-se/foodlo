@@ -1,0 +1,288 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'home/favicon.ico' %}">
+    <!-- CSS -->
+      <link rel="stylesheet" href="{% static 'home/layout.css' %}">
+      <link rel="stylesheet" href="{% static 'home/index.css' %}">    
+      <link rel="stylesheet" href="{% static 'home/profile.css' %}">    
+      <link rel="stylesheet" href="{% static 'home/about.css' %}">  
+    
+      <link rel="stylesheet" href="{% static 'home/checkout.css' %}">  
+      <link rel="stylesheet" href="{% static 'home/changepassword.css' %}">  
+      <link rel="stylesheet" href="{% static 'home/orders.css' %}">  
+    <link rel="stylesheet" href="{% static 'registration/login.css' %}">     
+<!--  <script src="{% static 'home/ajaxscripts.js' %}"></script> -->
+<!--   <script src="jquery-3.6.0.min.js"></script> -->
+      <link rel="stylesheet" href="{% static 'home/products.css' %}">
+    
+      <link rel="stylesheet" href="{% static 'home/cart.css' %}">
+      <link rel="stylesheet" href="{% static 'home/emptycart.css' %}">
+  
+      <link rel="stylesheet" href="{% static 'registration/register.css' %}">
+      <link rel="stylesheet" href="{% static 'home/productspecific.css' %}">
+    <!-- Fonts Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>foodlo.pk</title>
+    <!-- Carousel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Carousel End -->
+
+    <!-- Mapbox -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- Mapbox End -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+</head>
+<body>
+
+    <!-- Hamburger -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="/static/home/images/foodlo Logo/logo1.png" alt="foodlo logo" class="logo">
+            <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <ul class="links">
+            <li><a href="{% url 'home' %}" >Home</a></li>
+            <li><a href="{% url 'about' %}" >About</a></li>
+            <li><a href="/home#gallery">Gallery</a></li>
+          {% if request.user.is_authenticated %}  
+          <li><a href="{% url 'products' %}" >Order Now</a></li>
+          {% endif %}
+        </ul>
+        <div class="cart-btn-wrapper">
+            
+          {% if request.user.is_authenticated %}  <a href="{% url 'cart' %}" class="cart">Cart <i class="fas fa-shopping-cart"></i></a>
+           <a href="{% url 'logout' %}" class="cart">Logout <!--<i class="fas fa-shopping-cart"></i>--></a>
+           <a href="{% url 'profile' %}" class="profile">Profile <i class="fas fa-user"></i></a> 
+        
+          {% else %}
+          <a href="{% url 'login' %}" class="login">Login <i class="fa-solid fa-user-plus"></i></a>
+          {% endif %}
+        </div>
+    </aside>
+
+  <button class="back-to-top hidden"><i class="fa-solid fa-circle-arrow-up"></i></button>
+
+    <header class="header" id="myHeader">
+        <div class="headLogo">
+            <a href="{% url 'home' %}" ><img src="/static/home/images/foodlo Logo/logo1.png" alt="foodlo Logo"></a>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="{% url 'home' %}" >Home</a></li>
+                <li><a href="{% url 'about' %}" >About</a></li>
+                <li><a href="/home#gallery">Gallery</a></li>
+                 {% if request.user.is_authenticated %}   <li><a href="{% url 'products' %}" >Order Now</a></li>
+              {% endif %}
+            </ul>
+        </nav>
+        <ul class="cart-login">
+            
+          <!--<a href="{% url 'login' %}"><!--Register/ --><!-- Login <i class="fa-solid fa-user-plus"></i></a>-->
+            
+          {% if request.user.is_authenticated %}  <li><a href="{% url 'cart' %}">Cart <i class="fas fa-shopping-cart"></i></a></li>
+           <li><a href="{% url 'logout' %}">Logout <!--<i class="fas fa-shopping-cart"></i>--></a></li>
+          <li><a href="{% url 'profile' %}">Profile <i class="fas fa-user"></i></a></li>
+         
+          {% else %}
+          <li><a href="{% url 'login' %}" class="login">Login <i class="fa-solid fa-user-plus"></i></a></li>
+          {% endif %}
+        </ul>
+      <button class="open-btn"><i class="fa-solid fa-bars"></i></button>
+    </header>
+
+  {% block body %}
+  
+  {% endblock %}
+  
+  <!-- Footer -->
+
+    <footer class="footer">
+        <div class="firstGridChild">
+            <div class="logo">
+                <img src="{% static 'home/images/foodlo Logo/logo1.png' %}" alt="">
+            </div>
+            <div class="socials">
+                <a href="https://www.facebook.com/" target="_blank"><i class="socialIcon fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/"><i class="socialIcon fa-brands fa-instagram"></i></a>
+                    <a href="https://www.twitter.com/"><i class="socialIcon fa-brands fa-twitter"></i></a>
+                    <a href="https://www.tiktok.com/"><i class="socialIcon fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div class="secondThirdGridContainer">
+            <div class="secondGridChild">
+                <ul>
+                    <li><h3>Support</h3></li>
+                    <li><a href="">Contact Us</a></li>
+                    <li><a href="">FAQ</a></li>
+                    <li><a href="">Branch Locator</a></li>
+                </ul>
+            </div>
+            <div class="thirdGridChild">
+                <ul>
+                    <li><h3>foodlo</h3></li>
+                    <li><a href="">About FoodLo</a></li>
+                    <li><a href="">Carrers</a></li>
+                    <li><a href="">Newsroom</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="fourthGridChild" id="map"></div>
+        <div class="fifthGridChild">
+            <p>Copyright &copy; 2022 FoodLo pk | All Rights Reserved</p>
+        </div>
+    </footer>
+
+  <!-- In block body, don't write anything -->
+  <!-- Write only those parts in this file that would be same in all -->
+
+
+
+<script>
+  // Add Map to webpage
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmVzaWRhczc0MyIsImEiOiJjbDQxZGNyMmkwbm8zM2JwNnNya3hqOWhzIn0.C2IvyjYkg9V4zyOq2XmL8Q';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [67.0971, 24.9180], 
+        zoom: 12
+    });
+
+    // Add controls to map
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Add marker to map
+    const marker1 = new mapboxgl.Marker({color:'black'})
+        .setLngLat([67.0971, 24.9180])
+        .addTo(map);
+
+    // back To top Buttom
+    const showOnPx = 100;
+    const backToTopButton = document.querySelector(".back-to-top")
+
+    const scrollContainer = () => {
+        return document.documentElement || document.body;
+    };
+
+    document.addEventListener("scroll", () => {
+        if (scrollContainer().scrollTop > showOnPx) {
+            backToTopButton.classList.remove("hidden")
+        } else {
+            backToTopButton.classList.add("hidden")
+        }
+    })
+
+    const goToTop = () => {
+        document.body.scrollIntoView({behavior:"smooth"});
+    };
+
+    backToTopButton.addEventListener("click", goToTop)
+
+    // Hamburger JS
+
+    const openBtn = document.querySelector(".open-btn");
+    const sidebar = document.querySelector(".sidebar");
+
+    openBtn.addEventListener("click", () => {
+        sidebar.classList.add("show-sidebar");
+    })
+
+    const closeBtn = document.querySelector(".close-btn");
+    closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("show-sidebar");
+    })
+
+    $('.addQty').click(function(){
+      var id = $(this).attr("pid").toString();
+      var qty = $(".cartQty");
+      console.log(id)
+      $.ajax({
+        type:"GET",
+        url:"/pluscart",
+        data:{
+          prodid:id
+        },
+        success: function(data){
+          console.log("success");
+          qty.text(data.quantity);
+          document.getElementById("amtnoshipping").innerText = data.amount;
+          document.getElementById("amtwithshipping").innerText = data.totalamount;
+        }
+      })
+    })
+
+      $('.subtractQty').click(function(){
+      var id = $(this).attr("pid").toString();
+      var qty = $(".cartQty");
+      console.log(id)
+      $.ajax({
+        type:"GET",
+        url:"/minuscart",
+        data:{
+          prodid:id
+        },
+        success: function(data){
+          console.log("success");
+          qty.text(data.quantity);
+          document.getElementById("amtnoshipping").innerText = data.amount;
+          document.getElementById("amtwithshipping").innerText = data.totalamount;
+        }
+      })
+    })
+
+    $('.removeItemFromCart').click(function(){
+      var id = $(this).attr("pid").toString();
+      var eml = this
+      console.log(id)
+      $.ajax({
+        type:"GET",
+        url:"/removecart",
+        data:{
+          prodid:id
+        },
+        success: function(data){
+          console.log(data);
+          console.log("Delete")
+          document.getElementById("amtnoshipping").innerText = data.amount;
+          document.getElementById("amtwithshipping").innerText = data.totalamount;
+          eml.parentNode.parentNode.parentNode.remove()
+        }
+      })
+    })
+    $('.newsLetterBtn').click(function(){
+      var personEmail = $('.newsLetterInput').val();
+      var successMsg = $('.emailSuccess')
+      console.log(personEmail)
+      $.ajax({
+        type:"GET",
+        url:"mail",
+        data:{
+          email: personEmail
+        },
+        success: function(data){
+          console.log("success")
+          
+          console.log(successMsg)
+          successMsg.textContent="Done"
+          alert("Email sent successfully")          
+          console.log(successMsg.textContent)
+         // document.querySelector('emailSuccess').innerHTML= 'Email sent successfully.'
+        }
+      })
+    })
+  
+</script>
+
+</body>
+</html>

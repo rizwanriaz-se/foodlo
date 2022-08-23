@@ -1,0 +1,63 @@
+.aboutHero {
+    background-color: #dec3c3;
+}
+
+.aboutHeroText {
+    width: 90vw;
+    margin: 0 auto;
+}
+
+.aboutHero h1 a{
+    text-decoration: none;
+    color: rgb(133, 77, 41);
+}
+
+.aboutHero h1 {
+    font-size: 3.2rem;
+}
+
+.aboutUsMain {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 90vw;
+    gap: 4rem;
+    max-width: 117rem;
+    margin: 0 auto;
+    padding: 5rem 0;
+}
+
+.aboutUsText h1 {
+    font-size: 3.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.aboutUsText h1 span {
+    border-bottom: 0.4rem solid rgb(133, 77, 41);
+}
+
+.aboutUsText p {
+    line-height: 3rem;
+}
+
+.aboutUsText p span {
+    font-size: 2.3rem;
+    font-weight: bold;
+    color: rgb(133, 77, 41);
+}
+
+.aboutUsMain img {
+    box-shadow: 0 0.8rem 1.4rem 0 rgba(0,0,0,0.2);
+    border-radius: 0.5rem;
+    height: 75rem;
+    width: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 992px) {
+    .aboutUsMain {
+        display: block;
+    }
+    .aboutUsMain img {
+        width: 100%;
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "files": {
+    "home/static/home/cart.css": [
+      {
+        "id": "db3e140c-ff14-441d-b3ad-084b4c87841d",
+        "line": 191,
+        "version": 574,
+        "index": 2883
+      }
+    ],
+    "home/views.py": [
+      {
+        "id": "459eca1a-f198-4d03-bd36-032da098b0e9",
+        "line": 27,
+        "version": 9247,
+        "index": 923
+      }
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/about.css">
+    <link rel="stylesheet" href="../css/register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- Mapbox -->
+<!--    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' /> -->
+    <!-- Mapbox End -->
+ <!--   <title>foodlo</title>
+</head>
+<body>
+     -->   <!-- Hamburger -->
+      <!--  <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../images/foodlo Logo/logo1.png" alt="" class="logo">
+                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <ul class="links">
+                <li><a href="../html/home.html">Home</a></li>
+                <li><a href="../html/about.html">About</a></li>
+                <li><a href="../html/home.html#gallery">Gallery</a></li>
+                <li><a href="../html/products.html">Order Now</a></li>
+            </ul>
+            <div class="cart-btn-wrapper">
+                <a href="" class="cart">Cart <i class="fas fa-shopping-cart"></i></a>
+                <a href="">Register/Login <i class="fa-solid fa-user-plus"></i></a>
+            </div>
+        </aside>
+    
+        <button class="back-to-top hidden"><i class="fa-solid fa-circle-arrow-up"></i></button>
+
+        <section class="aboutHero">
+            <div class="aboutHeroText">
+                <h1><a href="../html/home.html">Home</a> / Registration</h1>
+            </div>
+        </section>
+-->
+
+{% block body %}
+        <!-- Registration Form -->
+        <div class="registerForm">
+            <div class="registerFormContainer">
+                <div id="formHeading">
+                    <h1><span>Re</span>gistration</h1>
+                </div>
+                    <div class="form">
+                    <form action="" method="post">
+                      {% if messages %}
+                        {% for message in messages %}
+                         <p> {{ message }} </p>
+                        {% endfor %}
+                      {% endif %}
+                      
+                      {% csrf_token %}
+                      {{ form }}
+                      
+                      <!--
+                        <div class="<!--input-field--">
+                            <i class="fa-regular  fa-user"></i>
+                          {{ form.username }}
+                        <!--    <input type="text" name="user-name" id="" placeholder="Enter your name" required>
+-->      <!--                  </div>
+                        <div  class="<!--input-field--">
+                            <i class="fa-regular fa-envelope"></i>
+                          {{ form.email }}
+                          <!--  <input type="email" name="user-email" id="" placeholder="Enter your email" required>
+           -->       <!--      </div>
+                        <div  class="<!--input-field--">
+                            <i class="fa-solid fa-lock"></i>
+                         <!--   <input type="password" name="user-password" id="user-pass" placeholder="Enter password" required>  -->
+                     <!--     {{ form.password1 }}
+-->                         <!--   <i class="fa-regular fa-eye" id="eye1" onclick="showPass()"></i> -->
+    <!--                   </div>
+                        <div  class="<!--input-field--">
+                            <i class="fa-solid fa-lock"></i>
+                          {{ form.password2 }}
+                    <!--        <input type="password" name="user-password-reEnter" id="user-Repass" placeholder="Re-enter password" required>
+-->                          <!--  <i class="fa-regular fa-eye" id="eye2" onclick="showRePass()"></i>  -->
+<!--                        </div>-->
+                        <div class="registerFooter">
+                            <div class="checkbox">
+                                <input type="checkbox" name="termsCheckbox" id="termsCheckbox" required>
+                                <label class=".cblabel" for="termsCheckbox">I accept all <a>terms & conditions</a></label>
+                            </div>
+                            <input id="registerNow" type="submit" value="Register Now" onclick="<!--window.location.reload()--">
+                            <p id="loginLink">Already have an account? <a href="{% url 'login' %}">Login Now</a></p>
+                        </div> 
+                      {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                          <p>{{ error }}</p>
+                        {% endfor %}
+                      {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+  {% endblock %}
+
+<!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/index.js"></script>
+    <script src="../js/showPass.js"></script>
+</body>
+</html> -->
