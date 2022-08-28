@@ -263,6 +263,7 @@
     $('.newsLetterBtn').click(function(){
       var personEmail = $('.newsLetterInput').val();
       var successMsg = $('.emailSuccess')
+     
       console.log(personEmail)
       $.ajax({
         type:"GET",
@@ -273,15 +274,37 @@
         success: function(data){
           console.log("success")
           
-          console.log(successMsg)
-          successMsg.textContent="Done"
-          alert("Email sent successfully")          
-          console.log(successMsg.textContent)
-         // document.querySelector('emailSuccess').innerHTML= 'Email sent successfully.'
+        //  console.log(successMsg)
+        //  successMsg.textContent="Done"
+       //   alert("Email sent successfully")          
+      //  
+      //    console.log(successMsg.textContent)
+          $('.newsLetterRight').html("Email sent successfully!")
+        //  thanksMsg.html("Email sent successfully") 
+         // document.querySelector('emailSuccess').innerHTML= 'Email sent successfully!'
         }
       })
     })
-  
+   /* 
+    $('.psbtn').click(function(){
+      var id = $('.psbtn_input').val();
+      console.log(id)
+      $.ajax({
+        type:"GET",
+        url:"/addtocart",
+        data:{
+          id:id,
+          foodname:foodname,
+          foodname:foodimg,
+          price:price,
+        },
+        success: function(data){
+          alert("item added")
+          console.log(data);
+        }
+      })
+    })
+    */
 </script>
 
 </body>

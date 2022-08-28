@@ -65,19 +65,19 @@
                     <h2 id="productPrice">$<!--10.99-->{{ product.price }}</h2>
                     <div class="psbtnwrapper">
                                     
-                    {% if already_in_cart %}
+                   <!-- {% if already_in_cart %}
 
                     <a  href= "{% url 'cart' %}"><button class="psbtn"  id="addToCart">Go To Cart <i class="fa-solid fa-bag-shopping"></i></button></a>
 
-                    {% else %}
+                    {% else %}-->
                       <form action='/addtocart'>
-                        <input type="hidden" value= {{ product.id }} name="prod_id" >
+                        <input type="hidden" class="psbtn_input" value= {{ product.id }} name="prod_id" >
                         <button class="psbtn" type="submit"  id="addToCart">Add To Cart <i class="fa-solid fa-bag-shopping"></i></button>
                       <!--  <button class="psbtn" id="buyNow">Buy Now <i class="fa-solid fa-money-bill-wave"></i></button> -->
                       </form>
-
+<!--
                     {% endif %}
-
+-->
                      
                       <!--<button class="psbtn"  id="addToCart">Add To Cart <i class="fa-solid fa-bag-shopping"></i></button>-->
                         <!--<button class="psbtn" id="buyNow">Buy Now <i class="fa-solid fa-money-bill-wave"></i></button>-->

@@ -95,10 +95,10 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jxcnkxda',
-        'USER': 'jxcnkxda',
-        'PASSWORD': '3hli_cKuDrBeh31Gz59OS4N40TaPIfE9',
-        'HOST': 'ziggy.db.elephantsql.com',
+        'NAME': 'kngkbrjl',
+        'USER': 'kngkbrjl',
+        'PASSWORD': 'vGEWWLpkZOjpfWLNetkdbh87U8DAh7Sc',
+        'HOST': 'jelani.db.elephantsql.com',
         'PORT': 5432
     }
 }
@@ -134,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Karachi'
 
 USE_I18N = True
 

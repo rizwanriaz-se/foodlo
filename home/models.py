@@ -1,20 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-#from django.core.validators import MinValueValidator, MaxValueValidator
-# Create your models here.
-
-#class Users(models.Model):
-#   username = models.CharField(max_length=64)
-
-#password = models.CharField(max_length=22)
-
-#class Products(models.Model):
-#  name=models.CharField(max_length=64)
-#  image=models.ImageField()
-#  items = models.IntegerField()
-#
-#  def __str__(self):
-#    return self.name
 
 STATE = (
     ("Sd", "Sindh"),
@@ -79,7 +64,7 @@ class OrderDetails(models.Model):
       return str(self.orderid)
 """
 
-
+"""
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -92,20 +77,24 @@ class CartInfo(models.Model):
 
     def __str__(self):
         return self.items.foodname
-
+"""
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cartid = models.ForeignKey(Cart, on_delete=models.CASCADE)
+#    cartid = models.ForeignKey(Cart, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class OrderInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     orderid = models.ForeignKey(Order, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=STATUS_CHOICE,
                               default="Pending",
                               max_length=30)
+    items = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
     #cartid=models.ForeignKey(Cart,on_delete=models.CASCADE)
 
 
