@@ -23,12 +23,14 @@ urlpatterns = [
          views.ProductView.as_view(),
          name="productsfilter"),
     path("cart/", views.cart, name="cart"),
+    path("emptycart/", views.emptycart, name="emptycart"),
     path("mail/", views.send_mail, name="sendmail"),
-    #path("pluscart/", views.pluscart),
-    #path("minuscart/", views.minuscart),
-    #path("removecart/", views.removecart),
+    path("pluscart/", views.pluscart),
+    path("minuscart/", views.minuscart),
+    path("removecart/", views.removecart),
     path("addtocart/", views.addtocart, name="addtocart"),
-    path("checkout/", views.checkout, name="checkout"),
+    path("checkout/", views.checkout.as_view(), name="checkout"),
+  #  path("confirm_order/",views.confirm_order,name="confirm_order"),
     path("profile/", views.profile, name="profile"),
-    path("orders/", views.OrdersView.as_view(), name="orders")
+    path("orders/", views.OrdersView, name="orders")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

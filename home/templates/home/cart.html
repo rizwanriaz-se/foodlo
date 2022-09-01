@@ -40,14 +40,14 @@
                         <p class="cartProductQty">Quantity: 
                           <div class="cartBtnContainer">
                             <div class="tempContainer">
-                              <a><button class="subtractQty" pid="{{cartitem.id}}">-</button></a> 
-                              <p class="cartQty">{{ cartitem.quantity }} </p>
-                              <a><button class="addQty" pid="{{cartitem.id}}">+</button></a>
+                              <a><button class="subtractQty"  pid="{{cartitem.id}}">-</button></a> 
+                              <p class="cartQty" id="{{cartitem.id}}">{{ cartitem.quantity }} </p>
+                              <a><button class="addQty"  pid="{{cartitem.id}}">+</button></a>
                             </div>
                           </div>
                         </p>
                         <div class="btnAndPrice">
-                            <button class="removeItemFromCart" pid="{{cartitem.items.id}}">Remove Item</button>
+                            <button class="removeItemFromCart" pid="{{cartitem.id}}">Remove Item</button>
                             <div class="cartProductPrice">${{ cartitem.price }}</div>
                         </div>
                     </div>

@@ -25,12 +25,12 @@
                   {% for prod in incheckout %}  
                   <div class="uoproductcard">
                         <div class="uoproductimage">
-                            <img src="{{ prod.items.foodimg.url }}" alt="">
+                            <img src="{{ prod.foodimg }}" alt="">
                         </div>
                         <div class="uoproducttext">
-                            <p class="uoprodname">Product: {{ prod.items.foodname}} </p>
+                            <p class="uoprodname">Product: {{ prod.foodname}} </p>
                             <p class="uoprodqty">Quantity: {{ prod.quantity }}</p>
-                            <p class="uoprice">Price: ${{ prod.items.price }}</p>
+                            <p class="uoprice">Price: ${{ prod.price }}</p>
                         </div>
                     </div>
                   

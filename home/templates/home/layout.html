@@ -57,7 +57,7 @@
             <li><a href="{% url 'about' %}" >About</a></li>
             <li><a href="/home#gallery">Gallery</a></li>
           {% if request.user.is_authenticated %}  
-          <li><a href="{% url 'products' %}" >Order Now</a></li>
+          <li><a href="{% url 'products' %}" >Products</a></li>
           {% endif %}
         </ul>
         <div class="cart-btn-wrapper">
@@ -83,7 +83,7 @@
                 <li><a href="{% url 'home' %}" >Home</a></li>
                 <li><a href="{% url 'about' %}" >About</a></li>
                 <li><a href="/home#gallery">Gallery</a></li>
-                 {% if request.user.is_authenticated %}   <li><a href="{% url 'products' %}" >Order Now</a></li>
+                 {% if request.user.is_authenticated %}   <li><a href="{% url 'products' %}" >Products</a></li>
               {% endif %}
             </ul>
         </nav>
@@ -205,7 +205,10 @@
 
     $('.addQty').click(function(){
       var id = $(this).attr("pid").toString();
-      var qty = $(".cartQty");
+      
+    //  var id = $(this).attr("pid");
+       
+      
       console.log(id)
       $.ajax({
         type:"GET",
@@ -214,8 +217,15 @@
           prodid:id
         },
         success: function(data){
+          console.log(id, typeof(id))
+          id=Number(id)
           console.log("success");
-          qty.text(data.quantity);
+//          console.log(qty[id])
+          
+          //qty.text(data.quantity);
+
+       //   document.getElementById("").innerText = data.quantity;
+          document.getElementById(id).innerText = data.quantity;
           document.getElementById("amtnoshipping").innerText = data.amount;
           document.getElementById("amtwithshipping").innerText = data.totalamount;
         }
@@ -224,7 +234,7 @@
 
       $('.subtractQty').click(function(){
       var id = $(this).attr("pid").toString();
-      var qty = $(".cartQty");
+    //  var qty = $(".cartQty");
       console.log(id)
       $.ajax({
         type:"GET",
@@ -234,7 +244,9 @@
         },
         success: function(data){
           console.log("success");
-          qty.text(data.quantity);
+      //    qty.text(data.quantity);
+
+          document.getElementById(id).innerText = data.quantity;  
           document.getElementById("amtnoshipping").innerText = data.amount;
           document.getElementById("amtwithshipping").innerText = data.totalamount;
         }
@@ -252,14 +264,24 @@
           prodid:id
         },
         success: function(data){
-          console.log(data);
-          console.log("Delete")
-          document.getElementById("amtnoshipping").innerText = data.amount;
-          document.getElementById("amtwithshipping").innerText = data.totalamount;
-          eml.parentNode.parentNode.parentNode.remove()
+          if (data.totalamount >0 || data.totalamount != undefined){
+            console.log(data);
+            console.log("Delete")
+            document.getElementById("amtnoshipping").innerText = data.amount;
+            document.getElementById("amtwithshipping").innerText = data.totalamount;
+            eml.parentNode.parentNode.parentNode.remove()
+          }
+          else{
+            window.location.replace('/emptycart')
+          }
         }
       })
     })
+    $("#confirmOrderBtn").click(function(){
+      window.location.replace("orders")
+    })
+
+
     $('.newsLetterBtn').click(function(){
       var personEmail = $('.newsLetterInput').val();
       var successMsg = $('.emailSuccess')
