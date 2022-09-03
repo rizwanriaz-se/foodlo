@@ -18,7 +18,7 @@ CATEGORY_CHOICE = (
 class Category(models.Model):
 
     foodtype = models.CharField(choices=CATEGORY_CHOICE, max_length=64)
-    typedesc = models.CharField(max_length=64)
+    typedesc = models.CharField(max_length=200)
 
     def __str__(self):
         return self.foodtype

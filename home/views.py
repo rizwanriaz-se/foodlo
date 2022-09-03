@@ -2,7 +2,7 @@ from turtle import title
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import RegisterForm, UserInfoForm
 from .models import  Product, Order, OrderInfo
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect,  JsonResponse
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
@@ -202,12 +202,15 @@ def removecart(request):
 
 class checkout(View):    
     def post(self,request):  
-
-        user = request.user    
+        user=request.user
         form = UserInfoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('orders')    
+        try:
+            if form.is_valid():
+                form.save()
+                Order.objects.create(user=user)
+            return redirect('orders')
+        except ValueError:
+            messages.error("Wrong input")
     def get(self,request):
         amount = 0
         shipping_amount = 2
