@@ -7,15 +7,6 @@ STATE = (
     ("Bal", "Balochistan"),
     ("Kp", "Khyber PakhtunKhwa"),
 )
-"""
-class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=64)
-    address = models.CharField(choices=STATE, max_length=64)
-
-    def __str__(self):
-        return self.user
-"""
 
 CATEGORY_CHOICE = (
     ("Pizza", "Pizza"),
@@ -52,36 +43,9 @@ STATUS_CHOICE = (
     ("Cancel", "Cancel"),
 )
 
-#def __str__(self):
-# return self.user + str(self.date)
-"""
-class OrderDetails(models.Model):
-    orderid = models.ForeignKey(Order, on_delete=models.CASCADE)
-    foodid = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-      return str(self.orderid)
-"""
-
-"""
-class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class CartInfo(models.Model):
-    cartid = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return self.items.foodname
-"""
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#    cartid = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id)
@@ -95,11 +59,9 @@ class OrderInfo(models.Model):
                               max_length=30)
     items = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    #cartid=models.ForeignKey(Cart,on_delete=models.CASCADE)
 
 
 class UserInfo(models.Model):
-    #  user = models.ForeignKey(User, on_delete=models.CASCADE,default="1")
     firstname = models.CharField(max_length=64)
     lastname = models.CharField(max_length=64)
     address = models.CharField(max_length=64)

@@ -1,9 +1,8 @@
 from turtle import title
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import RegisterForm, UserInfoForm
-from .models import User, Category, Product, Order, OrderInfo, UserInfo
-from django.contrib.auth import authenticate
-from django.http import HttpResponseRedirect, JsonResponse
+from .models import  Product, Order, OrderInfo
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views import View
 from django.contrib import messages
@@ -30,9 +29,6 @@ class ProductView(View):
 
 
 class RegisterView(View):
-    def get_success_url(self, user):
-        return redirect('/home/')
-
     def get(self, request):
         form = RegisterForm()
         return render(request, 'registration/register.html', {'form': form})
@@ -44,58 +40,14 @@ class RegisterView(View):
             messages.success(request,
                              'Congratulations! Registered successfully')
             form.save()
-            self.get_success_url(user=request.user)
-
-    #return HttpResponseRedirect(self.get_success_url())
+            
         return render(request, 'registration/register.html', {'form': form})
-    """
-  if request.method =="POST":
-    form=RegisterForm(request.POST)
-    if form.is_valid:
-      username=form.cleaned_data["username"]
-      password=form.cleaned_data["password1"]
-      form.save()
-      new_user=authenticate(
-        username=username,
-        password=password
-      )
-      
-      if new_user is not None:
-        Users.username=username
-        Users.password=password
-        Users.username.save_form_data(username)
-        Users.password.save_form_data(password)
-        new_user.save()
-        login(request,new_user)
-        return redirect('home/index.html')
-      
-  form=RegisterForm()
-  
-
-  
-  return render(request, "registration/register.html",{
-    "form": form
-  })
-"""
-
-
-#def login(request):
-#   return render(request, "registration/login.html")
-
 
 def about(request):
     return render(request, "home/about.html")
 
-
-#def products(request):
-#    return render(request, #"home/products.html")
-
-#def productspecific(request):
-#   return render(request, "home/productspecific.html")
-
-carts=[]
+carts=[] 
 def addtocart(request):
-    user = request.user
     prod_id= request.GET.get('prod_id')
     product=Product.objects.get(id=prod_id)
     cartitem={
@@ -105,19 +57,16 @@ def addtocart(request):
         'price':product.price,
         'quantity':1
     }
-   
+    
     if 'cartdata' in request.session:
-        if cartitem['id'] in request.session['cartdata']:
-            already_in_cart=True
-        else:
-            already_in_cart=False
+        if cartitem['id'] not in request.session['cartdata']:
             carts.append(cartitem)
-            request.session['cartdata'] = carts
+            request.session['cartdata']=carts
+
     else:
 
-        already_in_cart=False
-        carts.append(cartitem)
-        request.session['cartdata'] = carts
+        carts.append( cartitem)
+        request.session['cartdata']=carts
     print(carts)
     return redirect('/cart')
 
@@ -126,12 +75,6 @@ class ProductSpecificView(View):
         product = Product.objects.get(pk=int(pk))
         already_in_cart = False
 
-        
-    #    already_in_cart_user = Order.objects.filter(
-    #         user=request.user).exists()
-    #    already_in_cart_item= OrderInfo.objects.filter(items=product.id).exists()
-    #    already_in_cart = already_in_cart_user & already_in_cart_item
-    #    print(already_in_cart)
         for cart in carts:
             if product.id == cart['id']:
                 already_in_cart=True
@@ -144,39 +87,13 @@ class ProductSpecificView(View):
 
    
 def cart(request):
-    #if request.user.is_authenticated:
-     #   user = request.user
-        
-    #    cartitems = Order.objects.filter(user=user)
-    #    print(cartitems)
-    if len(carts) >0:
+    if len(carts)>0:
         shipping_amount = 2
-        
-  #  cart_product = [p for p in OrderInfo.objects.all() if p.orderid.user == user]
-  #  print(cart_product)
-        
-        print(carts)
         amount=0
         total_amount=0
         for i in range(0,len(carts)):
             amount=carts[i]['price']
             total_amount+=amount
-  #      print(len(carts))
-  #      print(amount)
-  #      print(total_amount)
-
-        #print(request.session['item'])
-    #for i in request.session['item']:
-        #val = Product.objects.get(id=int(i))
-        #val = {'prod': Product.objects.get(id=int(i))}
-
-        #print(int(i))
-    #    prod={'foodname':val.foodname, 'price':val.price}
-    #    print(prod)
-    #    print(prod['foodname'])
-        
-    #print(val['prod'])
-    
         return render(request, 'home/cart.html', {
             
             'cart': carts,
@@ -188,8 +105,8 @@ def cart(request):
     else:
         return render(request, 'home/emptycart.html')
 
-
-def pluscart(request):
+# to increment item
+def pluscart(request): 
     if request.method == 'GET':
         id = request.GET['prodid']
         item_qty=1
@@ -198,28 +115,12 @@ def pluscart(request):
         total_amount = 0
 
         for i in range(0,len(carts)):
-            print(id)
-            print(int(carts[i]['id']) == int(id))
-            print(i)
             if int(carts[i]['id']) == int(id):
                 carts[i]['quantity'] +=1
-                item_qty = carts[i]['quantity']
-                print(item_qty)
-                print(carts)
-                print(carts[i]['quantity'])
-                print(carts[i]['id'])
+                item_qty=carts[i]['quantity']
             
             amount=carts[i]['price'] * item_qty
             total_amount+=amount
-       #return render(request, 'home/cart.html',{
-        #        
-         #   'cart': carts,
-     #       
-      #      'totalamount': total_amount+shipping_amount,
-       #     'shipping_amount':shipping_amount,
-        #    'amount': total_amount
-        
-      #  })    
             data = {
                 'quantity': item_qty,
                 'amount': amount,
@@ -227,7 +128,7 @@ def pluscart(request):
                 }
         return JsonResponse(data)
 
-
+# to decrement item
 def minuscart(request):
 
     if request.method == 'GET':
@@ -244,23 +145,12 @@ def minuscart(request):
                 if carts[i]['quantity'] >1:
                     carts[i]['quantity'] -=1
                     item_qty=carts[i]['quantity'] 
-                #item_qty = carts[i]['quantity']
-                #print(item_qty)
                 print(carts)
                 print(carts[i]['quantity'])
                 print(carts[i]['id'])
             
             amount=carts[i]['price'] * item_qty
             total_amount+=amount
-       #return render(request, 'home/cart.html',{
-        #        
-         #   'cart': carts,
-     #       
-      #      'totalamount': total_amount+shipping_amount,
-       #     'shipping_amount':shipping_amount,
-        #    'amount': total_amount
-        
-      #  })    
             data = {
                 'quantity': item_qty,
                 'amount': amount,
@@ -272,79 +162,31 @@ def minuscart(request):
 def emptycart(request):
     return render(request,'home/emptycart.html')
 
+#to remove item
 def removecart(request):
     if request.method == 'GET':
         user = request.user
         if len(carts) > 0:
             item_qty=1
             id = request.GET['prodid']
-            product=Product.objects.get(id=id)
-            cartitem={
-            'id':product.id,
-            'foodname':product.foodname,
-            'foodimg':product.foodimg.url,
-            'price':product.price,
-            'quantity':1
-        }
    
             if 'cartdata' in request.session:
-#            if cartitem['id'] in request.session['cartdata']:
-
- #               carts_filtered = list(filter(lambda item: int(item['id']) != int(id), carts))
-                
                 for index, item in enumerate(carts):
-                #print(item['id'])
-                #print(id)
                     print(int(item['id']) == int(id))
                      
                     if int(item['id']) == int(id):
-                        print(item['id'])
-                        print(id)
-                        print(item['id'] == id)
                         del carts[index]
-                request.session['cartdata'] = carts
-                already_in_cart=False
+                carts = carts
             
-
-                print(carts)
-    
-    #    prodid = request.GET['prodid']
-     #   c = Order.objects.get(Q(items=prodid) & Q(user=user))
-      #  c.delete()
-
             amount = 0
             shipping_amount = 2
             total_amount = 0
-    #    cart_product = [
-     #       p for p in Order.objects.all() if p.user == request.user
-      #  ]
-    #    if cart_product:
-     #       for p in cart_product:
-        #        tempamount = (p.quantity * p.items.price)
-        #        amount += tempamount
-
             for i in range(0,len(carts)):
-        #    print(id)
-         #   print(int(carts[i]['id']) == int(id))
-          #  print(i)
                 if int(carts[i]['id']) == int(id):
                     item_qty = carts[i]['quantity']
-            #    print(item_qty)
-           #     print(carts)
-            #    print(carts[i]['quantity'])
-             #   print(carts[i]['id'])
             
                 amount=carts[i]['price'] * item_qty
                 total_amount+=amount
-       #return render(request, 'home/cart.html',{
-        #        
-         #   'cart': carts,
-     #       
-      #      'totalamount': total_amount+shipping_amount,
-       #     'shipping_amount':shipping_amount,
-        #    'amount': total_amount
-        
-      #  }) 
             if len(carts) >0:    
                 data = {
                 'quantity': item_qty,
@@ -357,185 +199,15 @@ def removecart(request):
         else:
             return render(request,"home/emptycart.html")
 
-      
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-""" prod_id = request.GET.get('prod_id')
-    product = Product.objects.get(id = prod_id)
-    cart ={}
-    cart[str(prod_id)]={
-        'foodname': product.foodname,
-        'foodimg':product.foodimg.url,
-       'price':product.price
-    }
-    if 'cartitem' in request.session:
-        if str(prod_id) in request.session['cartitem']:
-            already_in_cart= True
-        else:
-            already_in_cart=False
-            request.session['cartitem']=cart
-
-            cart.update(cart)
-            print(cart)
-#            cartdata=request.session['cartitem']
-            
- #           cartdata.update(cartdata)
-  #          request.session['cartitem'] =cartdata
-    else:
-   #
-   #      request.session['cartdata'] = cart      
-        request.session['cartitem']=cart
-        already_in_cart=False
-
-    #print(cart)
-    print(request.session)
-
-    print(request.session['cartitem'])
-    print( already_in_cart)
-
-    return redirect('/cart')
-    
-"""
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#    product_id = request.GET.get('prod_id')
- #   product = Product.objects.get(id=product_id)
-  #  cart = Order.objects.filter(user=user)
-   # cartid = Order(user=user)
-#   cartid.save()
-
-#    if user is  None:
-#        request.session['item']=[]
-#    else:
-#        try:
-#            request.session['item'].append(product)
-#        except KeyError:
-#            request.session['item']=[]
-
-#    print(request.session['item'])
-
-#    data = {'id': product.id, 'foodname': product.foodname , 'foodimg':product.foodimg.url, 'price':product.price}
-#    #return JsonResponse(data)
-#    print(data)
-#    return render(request,'home/cart.html',{'cart':data})
-  #  Order(user=user).save()
-   # OrderInfo(order)
-    #return redirect('/cart')
-
-
-class checkout(View):
-#    checkout = [p for p in OrderInfo.objects.all() if p.orderid.user == user]
-#    total_price = 0.0
-#    item_price = [price for price in checkout]
-#    for val in item_price:
-#       total_price += val.items.price * val.quantity
-    
-
+class checkout(View):    
     def post(self,request):  
 
         user = request.user    
         form = UserInfoForm(request.POST)
         if form.is_valid():
-
-            #messages.success(request, "info saved")
             form.save()
-            print("ds")
-            print(request.user)
-            print(Order(user=user))
-        #    order=Order(user=user)
-            order=Order.objects.create(user=user)
-            print(order)
-        #    order.save()
-        return redirect('orders')    
+            return redirect('orders')    
     def get(self,request):
         amount = 0
         shipping_amount = 2
@@ -546,9 +218,6 @@ class checkout(View):
             
             amount=carts[i]['price'] * item_qty
             total_amount+=amount
- #   print("-----------")
-  #  print(carts)        
-   # print(total_amount)
 
         form = UserInfoForm()
         return render(request, 'home/checkout.html', {
@@ -558,35 +227,12 @@ class checkout(View):
         })
 
 
-#  return render(request, 'home/checkout.html', {
-#       'incheckout': checkout,
-#      'total_price': total_price
-# })
-
-#def confirm_order(request):
- #   if request.method=="POST":
-  #      user=request.user
-        
-   #     order = Order(user=user)
-    #    order.save()
-
-    #return redirect('/orders')
-        
-
 def OrdersView(request):
     
         user = request.user
         shipping_amount = 2
-        
-  #  cart_product = [p for p in OrderInfo.objects.all() if p.orderid.user == user]
-  #  print(cart_product)
-        
-    #    print(carts)
         amount=0
         total_amount=0
-
- #       order=Order(user=user)
-  #      order.save()
         for i in range(0,len(carts)):
             item_qty = carts[i]['quantity']
             amount=carts[i]['price'] * item_qty
@@ -596,10 +242,6 @@ def OrdersView(request):
             for val in Order.objects.filter(user=user):
                 OrderInfo.objects.create(orderid=val,items=product,quantity=item_qty)
                        
-
-        #for i in range(0,len(carts)):
-         #   item_qty = carts[i]['quantity']
-          #  product_id=carts[i]['id']
             
         person = user.email
         print(person)
@@ -617,86 +259,30 @@ def OrdersView(request):
             recipient_list=[user.email],
             fail_silently=False)
         print(res)
-        del request.session['cartdata']
         return render(
             request, 'home/orders.html', {
                 'user': str(user).title(),
                 'orderid': recent_order,
                 'incheckout': carts,
-                'total_price': total_amount + 2,
+                'total_price': total_amount + shipping_amount,
                'status': status
             })
-        return render(request, 'home/cart.html', {
-            
-            'cart': carts,
-            
-            'totalamount': total_amount+shipping_amount,
-            'shipping_amount':shipping_amount,
-            'amount': total_amount
-        })
-    #else:
-    #return render(request, 'home/emptycart.html')
-
-
-
-
-    #    person = [user for user in checkout]
-    #   order_id = person[0].id
-    #  orders=Order(checkout)
-    #  order_id = (orders)
-     #   orderinfo = OrderInfo(user=user, orderid=order)
-      #  orderinfo.save()
-        #order_id=2
-        #    order=[]
-        # for i in range(0,len(checkout)):
-        #  checkout[i].items.foodname
-      #  order_id = order.id
-     #   status = orderinfo.status
-        #  cartlater = Cart.objects.filter(user=user)
-        #  cartlater.delete()
-
-        return render(
-            request, 'home/orders.html', {
-                'user': str(user).title(),
-       #         'orderid': order_id,
-                'incheckout': checkout,
-                'total_price': total_price + 2,
-        #        'status': status
-            })
-        #            return render(request, 'home/orders.html',{'form':form})
-        # else:
-        #  form = UserInfoForm()
-        # return render(request,'home/checkout.html',{'form':form})
-
-
-"""
-  def post(self, request):
-
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            messages.success(request,
-                             'Congratulations! Registered successfully')
-            form.save()
-        return render(request, 'registration/register.html', {'form': form})
-"""
-
 
 def profile(request):
     user = request.user
-    #  print(user)
-    #  userinfo = UserInfo.objects.get()
-    #  print(userinfo)
-    # print(userinfo)
-    #userinfo = 1
+    history=[]
     for order in Order.objects.filter(user=user):
-        order.orderid.quantity
+        for item in OrderInfo.objects.filter(orderid=order):
+            history.append({'name':item.items.foodname,'id':item.orderid,'quantity':item.quantity})
     return render(
         request,
         'home/profile.html',
         {
-            #   'userinfo': userinfo,
-            'user': user
+            'user': user,
+            'history':history
         })
+
+
     
 
 def send_mail(request):

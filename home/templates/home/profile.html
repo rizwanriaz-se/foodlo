@@ -16,6 +16,16 @@
             <p class="profileDetails"><span>Email:</span> {{user.email}}</p>
             <p class="profileDetails"><span>Date Joined:</span> {{user.date_joined}}</p>
         </div>
+
+        <p class="rightcpheader">History</p>
+        
+        {% for item in history %}
+        <div class="rightcp">
+            <p class="profileDetails"><span>Item:</span> {{item.name}}</p>
+            <p class="profileDetails"><span>Quantity:</span> {{item.quantity}}</p>
+        </div>
+        {% endfor %}
+        
 </section>
 
 
