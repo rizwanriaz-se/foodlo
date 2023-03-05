@@ -12,40 +12,33 @@
                 <div class="leftCartTop">
                     <h1 class="cartHeader">Cart Items</h1>
                 </div>
-              <!--  <div class="leftCartBottom cartProduct">
-                    <div class="bottomFirst">
-                        <img src="../images/neapolitan-pizza.jpg" alt="">
-                    </div>
-                    <div class="bottomSecond">
-                        <h3 class="cartProductName">Neapolitan Pizza</h2>
-                        <p class="cartProductQty">Quantity: <button class="subtractQty">-</button> 1 <button class="addQty">+</button> </p>
-                        <div class="btnAndPrice">
-                            <button class="removeItemFromCart">Remove Item</button>
-                            <div class="cartProductPrice">$14.99</div>
-                        </div>
-                    </div>
-                </div>  
-                <div class="cartProductSeperator"></div> -->
-              <!--{% if cartitem in carts %}-->
-                <div></div>
-              <!--{% else %}-->
+              
                 {% for cartitem in cart %}
                 
                   <div class="leftCartBottom cartProduct">
                     <div class="bottomFirst">
-                        <img src="{{ cartitem.foodimg }}" alt="">
+                        <img src="{{ cartitem.foodimg }}" alt="" loading="lazy">
                     </div>
+                    
                     <div class="bottomSecond">
+
+                        <!-- Item name, quantity and change quantity buttons-->
                         <h3 class="cartProductName">{{ cartitem.foodname}}</h3>
                         <p class="cartProductQty">Quantity: 
                           <div class="cartBtnContainer">
                             <div class="tempContainer">
-                              <a><button class="subtractQty"  pid="{{cartitem.id}}">-</button></a> 
+                              <a>
+                                <button class="subtractQty" pid="{{cartitem.id}}">-</button>
+                              </a> 
                               <p class="cartQty" id="{{cartitem.id}}">{{ cartitem.quantity }} </p>
-                              <a><button class="addQty"  pid="{{cartitem.id}}">+</button></a>
+                              <a>
+                                <button class="addQty"  pid="{{cartitem.id}}">+</button>
+                              </a>
                             </div>
                           </div>
                         </p>
+
+                        <!-- Remove item button -->
                         <div class="btnAndPrice">
                             <button class="removeItemFromCart" pid="{{cartitem.id}}">Remove Item</button>
                             <div class="cartProductPrice">${{ cartitem.price }}</div>
@@ -53,8 +46,9 @@
                     </div>
                 </div>
               {% endfor %}
-             <!-- {% endif %}-->
             </div>
+
+            <!-- Display total items amount and price -->
             <div class="rightCartChild">
                 <div class="rightCartTop">
                     <h2 class="rightCartHeader">Cart Totals</h2>
@@ -81,4 +75,4 @@
     </section>
 
 
-    {% endblock %}z  
+    {% endblock %}

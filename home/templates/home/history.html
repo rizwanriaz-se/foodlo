@@ -1,0 +1,115 @@
+{% extends "home/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<!-- History Section -->
+<section class="changePassword">
+    <div class="leftcp">
+        <div class="border">
+            <p>Welcome {{user | capfirst }}</p>
+            <button>Order History</button>
+        </div>
+    </div>
+    
+    <div class="rightcp">
+      <p class="rightcpheader history-buttons">
+        Order History             
+        <span>
+          <button type="button" class="history-button active" data-target="completed-history">Completed</button>
+          <button type="button" class="history-button" data-target="pending-history">Pending</button>
+        </span>
+      </p>
+          
+      <div class="history-section active" id="completed-history">
+            {% if history.completed %}
+              <ul class="history-list">
+                {% for order in history.completed %}
+                  <li class="history-item">
+                    <p class="historyDetails">
+                      <span>Order ID: </span>
+                      {{ order.id }}
+                    </p>
+                    <p class="historyDetails">
+                      <span>Date: </span>
+                      {{ order.date }}
+                    </p>
+                 
+                    <p class="historyDetails">
+                      <span>Items: </span>
+                        <ul>
+                        {% for item in order.items %}
+                          <li>{{ item.name }} - {{ item.quantity }}</li>
+                        {% endfor %}
+                      </ul>
+                    </p>
+                    
+                    <p class="historyDetails">
+                      <span>Total Items Quantity: </span>
+                      {{ order.total_items_qty }}
+                    </p>
+                  </li>
+                {% endfor %}
+              </ul>
+
+            {% else %}
+              <p>No completed orders.</p>
+            
+            {% endif %}
+          </div>
+          
+          <div class="history-section" id="pending-history">
+            {% if history.pending %}
+              <ul class="history-list">
+                {% for order in history.pending %}
+                <li class="history-item">
+                  <p class="historyDetails">
+                    <span>Order ID: </span>
+                    {{ order.id }}
+                  </p>
+
+                  <p class="historyDetails">
+                    <span>Items:</span>
+                    <ul>
+                      {% for item in order.items %}
+                        <li>{{ item.name }} - {{ item.quantity }}</li>
+                      {% endfor %}
+                    </ul>
+                  </p>
+                  
+                  <p class="historyDetails">
+                    <span>Total Items Quantity:</span>
+                      {{ order.total_items_qty }}
+                  </p>
+                </li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              <p>No pending orders.</p>
+            {% endif %}
+          </div>
+          
+          <script>
+            const buttons = document.querySelectorAll('.history-button');
+            const sections = document.querySelectorAll('.history-section');
+            
+            buttons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const target = button.dataset.target;
+                
+                buttons.forEach((button) => {
+                  button.classList.remove('active');
+                });
+                
+                sections.forEach((section) => {
+                  section.classList.remove('active');
+                });
+                
+                button.classList.add('active');
+                document.getElementById(target).classList.add('active');
+              });
+            });
+          </script>
+    </div>        
+  </section>
+{% endblock %}

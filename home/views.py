@@ -1,197 +1,269 @@
-from turtle import title
-from django.shortcuts import render, redirect, HttpResponse
-from .forms import RegisterForm, UserInfoForm
-from .models import  Product, Order, OrderInfo
-from django.http import HttpResponseRedirect,  JsonResponse
-from django.urls import reverse
+import json
+import stripe
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from .forms import RegisterForm
+from .models import  Product, Order, OrderInfo, OrderItem
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
 from django.views import View
-from django.contrib import messages
-from django.db.models import Q
 from django.core.mail import send_mail as sm
-from django.db import connection
+from django.utils.decorators import method_decorator
+from django.conf import settings
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
+
+#API KEY for connecting to stripe account
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
+
+#Home page view
 def home(request):
     return render(request, "home/index.html")
 
 
+#Product page view
+@method_decorator(login_required, name='dispatch')
 class ProductView(View):
+
+    #Display all products along with filters
     def get(self, request, data=None):
         if data == None:
             products = Product.objects.all()
-            print(products.query)
         elif data == 1 or data == 2 or data == 3:
             products = Product.objects.filter(foodcategory=data)
-            print(products.query)
+
         return render(request, 'home/products.html', {'products': products})
 
 
-
+#Register page view
 class RegisterView(View):
+    
+    #Display register page
     def get(self, request):
         form = RegisterForm()
         return render(request, 'registration/register.html', {'form': form})
-
+    
+    #Handle register form submission
     def post(self, request):
-
         form = RegisterForm(request.POST)
         if form.is_valid():
-            messages.success(request,
-                             'Congratulations! Registered successfully')
-            form.save()
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            request.session.setdefault('cartdata',[])
             
+            return redirect('home') # replace 'homepage' with the name of your homepage URL
         return render(request, 'registration/register.html', {'form': form})
 
+
+#Change password view
+def changePassword(request):
+
+    #Handle form submission
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('home')
+    
+    #Display change password page
+    else:
+        form = PasswordChangeForm(user=request.user)
+
+    return render(request, 'home/changepassword.html', {'form': form, 'user':request.user})
+
+
+#Password Reset View
+def password_reset(request):
+
+    #Handle form submission
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(
+                request=request,
+                email_template_name='registration/password_reset_email.txt',
+                subject_template_name='registration/password_reset_subject.txt'
+            )
+            messages.success(request, 'An email has been sent to reset your password.')
+            return redirect('password_reset_done')
+
+    #Display reset password page
+    else:
+        form = PasswordResetForm()
+
+    return render(request, 'registration/password_reset_form.html', {'form': form})
+
+#New Password confirm view
+def password_reset_confirm(request, uidb64, token):
+    return auth_views.PasswordResetConfirmView.as_view(
+        template_name='registration/password_reset_confirm.html',
+        success_url='https://d2b5-119-160-35-62.ap.ngrok.io/reset/done',
+        post_reset_login=False,
+        post_reset_login_backend='django.contrib.auth.backends.ModelBackend'
+    )(request, uidb64=uidb64, token=token)
+
+
+#About page view
 def about(request):
     return render(request, "home/about.html")
 
-carts=[] 
+
+#View to handle adding items to cart functionality
+@login_required
 def addtocart(request):
-    prod_id= request.GET.get('prod_id')
-    product=Product.objects.get(id=prod_id)
-    cartitem={
-        'id':product.id,
-        'foodname':product.foodname,
-        'foodimg':product.foodimg.url,
-        'price':product.price,
-        'quantity':1
+    prod_id = request.GET.get('prod_id')
+    product = Product.objects.get(id=prod_id)
+    cartdata = request.session.setdefault('cartdata', [])
+    cartitem = {
+        'id': product.id,
+        'foodname': product.foodname,
+        'foodimg': product.foodimg.url,
+        'price': product.price,
+        'quantity': 1
     }
-    
-    if 'cartdata' in request.session:
-        if cartitem['id'] not in request.session['cartdata']:
-            carts.append(cartitem)
-            request.session['cartdata']=carts
-
+    for item in cartdata:
+        if str(item['id']) == str(cartitem['id']):
+            item['quantity'] += 1
+            break
     else:
+        cartdata.append(cartitem)
+    request.session.modified = True
 
-        carts.append( cartitem)
-        request.session['cartdata']=carts
-    print(carts)
     return redirect('/cart')
 
+
+#View to display information about specific product
+@method_decorator(login_required, name='dispatch')
 class ProductSpecificView(View):
+    # @login_required
     def get(self, request, pk):
         product = Product.objects.get(pk=int(pk))
-        already_in_cart = False
-
-        for cart in carts:
-            if product.id == cart['id']:
-                already_in_cart=True
-            else:
-                already_in_cart=False 
         return render(request, 'home/productspecific.html', {
             'product': product,
-            "already_in_cart": already_in_cart
         })
 
-   
+
+#View to display cart page
+@login_required
 def cart(request):
-    if len(carts)>0:
+    cartdata = request.session.setdefault('cartdata', [])
+    if len(cartdata)>0:
         shipping_amount = 2
-        amount=0
-        total_amount=0
-        for i in range(0,len(carts)):
-            amount=carts[i]['price']
-            total_amount+=amount
+        amount = sum(item['price'] * item['quantity'] for item in cartdata)
         return render(request, 'home/cart.html', {
-            
-            'cart': carts,
-            
-            'totalamount': total_amount+shipping_amount,
+            'cart': cartdata,
+            'totalamount': amount+shipping_amount,
             'shipping_amount':shipping_amount,
-            'amount': total_amount
+            'amount': amount
         })
     else:
         return render(request, 'home/emptycart.html')
 
-# to increment item
+
+#View to display order history of user
+@login_required
+def history(request):
+    user = request.user
+    history = {'completed': [], 'pending': []}
+    for order in Order.objects.filter(user=user):
+        order_items = []
+        total_items_qty = 0
+        for item in OrderItem.objects.filter(order=order):
+            order_items.append({'name': item.product, 'quantity': item.quantity})
+            total_items_qty += item.quantity
+        if order.orderinfo_set.exists():
+            order_info = {'id': order.id, 'date': order.orderinfo_set.first().date,
+                          'status': order.orderinfo_set.first().status, 'items': order_items,
+                          'total_items_qty': total_items_qty}
+            if order_info['status'] == 'Delivered':
+                history['completed'].append(order_info)
+            else:
+                history['pending'].append(order_info)
+        else:
+            order_info = {'id': order.id, 'status': 'Pending', 'items': order_items,
+                          'total_items_qty': total_items_qty}
+            history['pending'].append(order_info)
+
+    return render(request, 'home/history.html', {'user': user, 'history': history})
+
+
+#View to handle increment of cart item quantity
+@login_required
 def pluscart(request): 
+
     if request.method == 'GET':
         id = request.GET['prodid']
-        item_qty=1
-        amount = 0
+        cartdata = request.session.setdefault('cartdata', [])
+        for item in cartdata:
+            if str(id) == str(item['id']):
+                item['quantity'] +=1
+                request.session.modified= True
+                break
         shipping_amount = 2
-        total_amount = 0
-
-        for i in range(0,len(carts)):
-            if int(carts[i]['id']) == int(id):
-                carts[i]['quantity'] +=1
-                item_qty=carts[i]['quantity']
-            
-            amount=carts[i]['price'] * item_qty
-            total_amount+=amount
-            data = {
-                'quantity': item_qty,
+        amount = sum(item['price'] * item['quantity'] for item in cartdata)
+        data = {
+                'quantity': item['quantity'],
                 'amount': amount,
-                'totalamount': total_amount + shipping_amount
+                'totalamount': amount + shipping_amount
                 }
         return JsonResponse(data)
 
-# to decrement item
-def minuscart(request):
 
+#View to handle decrement of cart item quantity
+@login_required
+def minuscart(request):
     if request.method == 'GET':
         id = request.GET['prodid']
-        amount = 0
+        cartdata = request.session.setdefault('cartdata', [])
+        for item in cartdata:
+            if str(id) == str(item['id']):
+                if item['quantity'] > 1:
+                    item['quantity'] -=1
+                    request.session.modified= True
+                break
         shipping_amount = 2
-        total_amount = 0
-        item_qty=1
-        for i in range(0,len(carts)):
-            print(id)
-            print(int(carts[i]['id']) == int(id))
-            print(i)
-            if int(carts[i]['id']) == int(id):
-                if carts[i]['quantity'] >1:
-                    carts[i]['quantity'] -=1
-                    item_qty=carts[i]['quantity'] 
-                print(carts)
-                print(carts[i]['quantity'])
-                print(carts[i]['id'])
-            
-            amount=carts[i]['price'] * item_qty
-            total_amount+=amount
-            data = {
-                'quantity': item_qty,
+        amount = sum(item['price'] * item['quantity'] for item in cartdata)
+        data = {
+                'quantity': item['quantity'],
                 'amount': amount,
-                'totalamount': total_amount + shipping_amount
+                'totalamount': amount + shipping_amount
                 }
         return JsonResponse(data)
     
 
+#View to display empty cart page
 def emptycart(request):
     return render(request,'home/emptycart.html')
 
-#to remove item
+
+#View to handle removal of item from cart
+@login_required
 def removecart(request):
     if request.method == 'GET':
         user = request.user
-        if len(carts) > 0:
-            item_qty=1
+        cartdata = request.session.setdefault('cartdata', [])
+        if len(cartdata) > 0:
             id = request.GET['prodid']
-   
-            if 'cartdata' in request.session:
-                for index, item in enumerate(carts):
-                    print(int(item['id']) == int(id))
-                     
-                    if int(item['id']) == int(id):
-                        del carts[index]
-                carts = carts
-            
-            amount = 0
+            for index, item in enumerate(cartdata):
+                if str(item['id']) == str(id):
+                    del cartdata[index]
+                    request.session.modified=True
+                    break 
             shipping_amount = 2
-            total_amount = 0
-            for i in range(0,len(carts)):
-                if int(carts[i]['id']) == int(id):
-                    item_qty = carts[i]['quantity']
-            
-                amount=carts[i]['price'] * item_qty
-                total_amount+=amount
-            if len(carts) >0:    
+            amount = sum(item['price'] * item['quantity'] for item in cartdata)
+            if len(cartdata) >0:    
                 data = {
-                'quantity': item_qty,
+                'quantity': item['quantity'],
                 'amount': amount,
-                'totalamount': total_amount + shipping_amount
+                'totalamount': amount + shipping_amount
                 }
                 return JsonResponse(data)
             else:
@@ -200,97 +272,148 @@ def removecart(request):
             return render(request,"home/emptycart.html")
 
 
-class checkout(View):    
-    def post(self,request):  
+#View to handle checkout page
+@method_decorator(login_required, name='dispatch')
+class checkout(View):
+
+    #For submitting checkout form
+    def post(self,request):
         user=request.user
-        form = UserInfoForm(request.POST)
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        billing_address = body['billingAddress']
+        request.session['order_address'] = billing_address
+        order = Order.objects.create(user=user)
+        request.session['order_id'] = order.id
         try:
-            if form.is_valid():
-                form.save()
-                Order.objects.create(user=user)
-            return redirect('orders')
-        except ValueError:
-            messages.error("Wrong input")
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types = ['card'],
+                line_items = [{
+                                'price': 'price_1MecRdF9QX3VoyirciBSqfeI',
+                                'quantity': 1
+                            }],
+                mode=  'payment',
+                success_url='https://d2b5-119-160-35-62.ap.ngrok.io/orders/',
+                cancel_url='https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', 
+                metadata={
+                     'address': billing_address,
+                 }
+            )
+            request.session.save()
+            return JsonResponse({'id': checkout_session.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    #View to display checkout page
     def get(self,request):
-        amount = 0
+        user = request.user
         shipping_amount = 2
-        total_amount = 0
-
-        for i in range(0,len(carts)):
-            item_qty = carts[i]['quantity']
-            
-            amount=carts[i]['price'] * item_qty
-            total_amount+=amount
-
-        form = UserInfoForm()
+        cartdata=request.session.get('cartdata',[])
+        if cartdata == []:
+            messages.warning(request, 'Your cart is empty. Please add items to cart before proceeding to checkout.')
+            return redirect('cart')
+        amount = sum(item['price'] * item['quantity'] for item in cartdata)
         return render(request, 'home/checkout.html', {
-            'form': form,
-            'incheckout': carts,
-            'total_price': total_amount + shipping_amount
+            'user': user,
+            'incheckout': cartdata,
+            'total_price': amount + shipping_amount,
+            'key': settings.STRIPE_PUBLISHABLE_KEY
         })
 
 
-def OrdersView(request):
+#View for handling stripe webhooks
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.headers.get('STRIPE_SIGNATURE')
+    endpoint_secret = 'we_1MgfPxF9QX3VoyirAAklkuuA'
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
     
-        user = request.user
-        shipping_amount = 2
-        amount=0
-        total_amount=0
-        for i in range(0,len(carts)):
-            item_qty = carts[i]['quantity']
-            amount=carts[i]['price'] * item_qty
-            total_amount+=amount
-            product=Product.objects.get(id=carts[i]['id'])
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        order_id = event['data']['object']['client_reference_id']
+        order = Order.objects.get(id=order_id)
+        order.save()
 
-            for val in Order.objects.filter(user=user):
-                OrderInfo.objects.create(orderid=val,items=product,quantity=item_qty)
-                       
-            
-        person = user.email
-        print(person)
+    return redirect('orders')
+
+
+#View to display orders page
+@login_required
+def OrdersView(request):
+    user = request.user
+    shipping_amount = 2
+    cartdata=request.session.get('cartdata')
+    
+    # Check if cart is empty
+    if cartdata == [] or None:
+        return redirect('cart')
+ 
+    #Retrieve address and order from session
+    else:
+        order_id = request.session.get('order_id')
+        
+        #Find order in session, if nothing found, redirect to cart page
+        try:
+            order = get_object_or_404(Order, id=order_id)
+        except:
+            return redirect('cart')
+        address = request.session.get('order_address')
+        total_quantity = 0
+
+
+        # Save the OrderInfo and OrderItem object to the database
+        for item_data in cartdata:
+            product = Product.objects.get(id=item_data['id'])
+            quantity = item_data['quantity']
+            total_quantity += quantity
+
+            OrderItem.objects.create(order=order, product=product, quantity=quantity)
+
+        OrderInfo.objects.create(orderid=order, status='Pending', total_items_qty=total_quantity, address=address)
+
         order_of_user = Order.objects.filter(user=user)
         recent_order = order_of_user.last()
-        print(Order.objects.filter(user=user))
-        print(recent_order)
-        print([p for p in carts])
         status="Pending"
+        
+        #Send email to user about ordder confirmation
         res = sm(
-            subject="Order Info",
-            message=(f"You order {recent_order} has been confirmed. It contains {str([p['foodname'] for p in carts])}"),
+             subject="Order Info",
+             message=(f"You order {recent_order} has been confirmed. It contains {str([p['foodname'] for p in request.session['cartdata']])}"),
             
-            from_email='foodlo.mail.pk@gmail.com',
-            recipient_list=[user.email],
-            fail_silently=False)
-        print(res)
+             from_email='foodlo.mail.pk@gmail.com',
+             recipient_list=[user.email],
+             fail_silently=False)
+        
+        amount = sum(item['price'] * item['quantity'] for item in cartdata)
+        request.session['cartdata'] = []
+        request.session.modified = True
         return render(
             request, 'home/orders.html', {
                 'user': str(user).title(),
                 'orderid': recent_order,
-                'incheckout': carts,
-                'total_price': total_amount + shipping_amount,
+                'incheckout': cartdata,
+                'total_price': amount + shipping_amount,
                'status': status
             })
 
+
+#View for displaying profile page
+@login_required
 def profile(request):
     user = request.user
-    history=[]
-    for order in Order.objects.filter(user=user):
-        for item in OrderInfo.objects.filter(orderid=order):
-            history.append({'name':item.items.foodname,'id':item.orderid,'quantity':item.quantity})
-    return render(
-        request,
-        'home/profile.html',
-        {
-            'user': user,
-            'history':history
-        })
+    return render(request, 'home/profile.html', {'user': user})
 
 
-    
-
+#View for handling newsletter subscription
 def send_mail(request):
     person = request.GET['email']
-    print(person)
     res = sm(
         subject="Thanks for subscribing to our newletter",
         message=
@@ -298,5 +421,4 @@ def send_mail(request):
         from_email='foodlo.mail.pk@gmail.com',
         recipient_list=[person],
         fail_silently=False)
-    print(res)
     return HttpResponse(f"Email sent to {res} members.")

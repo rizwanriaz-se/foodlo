@@ -1,0 +1,76 @@
+.historyDetails span {
+    font-size: 1.7rem;
+    font-weight: bold;    
+}
+.history-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+.history-button {
+    background-color: #f2f2f2;
+    border: none;
+    color: black;
+    cursor: pointer;
+    margin: 0 10px;
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+  }
+.history-button.active {
+    background-color:rgb(126, 77, 47);
+    color: white;
+  }
+  
+.history-section {
+    display: none;
+  }
+  
+  .history-section.active {
+    display: block;
+  }
+
+.history-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+.history-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .rightcpheader {
+      border-bottom: 1px solid black;
+      font-size: 3rem;    
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding-bottom: 1rem;
+  }
+
+  @media(max-width:992px) {
+      .changePassword {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+      }
+      .border {
+          display: flex;
+          flex-direction: column;
+          border: none;
+          height: fit-content;
+          align-items: center;
+      }
+      .rightcpheader {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+      }
+      .rightcp {
+          display: flex;
+          flex-direction: column;
+      }
+  }

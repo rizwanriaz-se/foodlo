@@ -3,74 +3,15 @@
 
 {% block body %}
 
-
-
 <!-- Checkout Section -->
 
         <p id="checkoutMainHeading">Checkout</p>
 
         <section class="checkoutMain">
             <div class="checkoutContainer">
-                <div class="checkoutForm">
-                    <div class="checkoutHeader">
-                        <p>Billing Details</p>
-                        <form method="post" id="userinfoform">
-                          {% csrf_token %}
-                          
-                          {% for field in form %}
-                          
-                          
-                      
-                          {{ field.label_tag }} {{field}}
-                          
-                          
-                          {% if messages %} 
-                          {% for message in messages %}
-                         <p style="color:green; font-size:15px;"> {{ message }} </p>
-                            {% endfor %}
-                        {% endif %}
-                          {% if field.errors %}<div style="color:red; font-size:10px;">{{field.errors}}</div>{%endif%}
-                          {% endfor %}
-                          
-    
-                            <!--<div class="nameContainer">
-                                <div class="firstNameContainer checkoutInputs">
-                                    <label for="firstName">Name *</label>
-                                    <input type="text" name="firstName" id="firstName" placeholder="First Name">
-                                </div>
-                                <div class="lastNameContainer checkoutInputs">
-                                    <label for="lastName">Last Name *</label>
-                                    <input type="text" name="lastName" id="lastName" placeholder="Last Name">
-                                </div>
-                            </div>
-                            <div class="streetAddress checkoutInputs">
-                                <label for="streetAddress">Street Address *</label>
-                                <input type="text" name="streetAddress" id="streetAddress" placeholder="House Number and Street Name">
-                            </div>
-                            <div class="city checkoutInputs">
-                                <label for="city">Town/City *</label>
-                                <input type="text" name="city" id="city" placeholder="">
-                            </div>
-                            <div class="state checkoutInputs">
-                                <label for="state">State/County *</label>
-                                <input type="text" name="state" id="state">
-                            </div>
-                            <div class="postcode checkoutInputs">
-                                <label for="postalCode">Postcode/ZIP *</label>
-                                <input type="number" name="postalCode" id="postalCode">
-                            </div>
-                            <div class="phoneNumber checkoutInputs">
-                                <label for="phone">Phone *</label>
-                                <input type="number" name="phone" id="phone">
-                            </div>
-                            <div class="emailAddress checkoutInputs">
-                                <label for="email">Email *</label>
-                                <input type="email" name="email" id="email">
-                            </div> -->
-                        </form>
-                    </div>
-                </div>
                 <div class="orderSummary">
+                    
+                    <!-- Order Summary Section-->
                     <div class="orderSummaryHeader">
                         <p>Your Order</p>
                     </div>
@@ -78,13 +19,15 @@
                         <div class="orderSummaryCardHeader">
                             <p>Product</p>
                         </div>
-                      {% for val in incheckout %}
-                        <div class="orderSummaryProduct">
-                            <p class="ospName">{{val.foodname}}</p>
-                            <p class="ospQty"><span>x</span>{{val.quantity}}</p>
-                            <p class="ospPrice">${{val.price}}</p>
-                        </div>
-                      {% endfor %}
+                        
+                        {% for val in incheckout %}
+                            <div class="orderSummaryProduct">
+                                <p class="ospName">{{val.foodname}}</p>
+                                <p class="ospQty"><span>x</span>{{val.quantity}}</p>
+                                <p class="ospPrice">${{val.price}}</p>
+                            </div>
+                        {% endfor %}
+                        
                         <div class="orderItemSeperator"></div>
                         <div class="orderItemSeperator"></div>
                         <div class="osTotal">
@@ -92,31 +35,175 @@
                             <p class="osTotalPrice">${{total_price}}</p>
                         </div>
                         <div class="seperator"></div>
+                        
+                        <!-- Payment method Section -->
                         <div class="paymentHeader">
                             <p>Payment</p>
                         </div>
                         <div class="paymentOptions">
-                           <div class="cod">
-                               <input type="checkbox" name="cod" id="cod" checked onclick="this.checked=!this.checked;">
-                               <label for="cod">Cash On Delivery</label>
-                           </div> 
+                            <p>
+                                <input type="radio" name="cod" id="cod" checked onclick="displayDiv()">
+                                <label for="cod">Cash On Delivery</label>
+                                <br>
+                            </p>
+                            <p>
+                                <input type="radio" name="cod" id="online" onclick="displayDiv()">
+                                <label for="online">Online Payment</label>
+                            </p>           
                         </div>
-                        <!-- <div class="cardPayment-paypal">
-                            <button id="paypal"><i>Paypal</i></button>
-                            <button id="cardPayment"><i class="fa-regular fa-credit-card"></i>Debit Or Credit Card</button>
-                        </div> -->
+                            
+                        <div class="cardPayment cardPayment-paypal-hidden">
+                            <button id="paypal"><i>Stripe</i></button>
+                        </div>
+                        
                         <div class="terms-conditions">
                             <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
                         </div>
-                        <div class="placeOrderBtn"><form method="post" action="{% url 'orders' %}">
-                            <a href="{% url 'orders' %}"><button id="confirmOrderBtn" type="submit" form ="userinfoform"><!--<input id="hiddenBtn" form="userinfoform">--> Place Order</button></a>
-                            <!--<button>Place Order</button>-->
-                        <form>
-                        </div>
                     </section>
                 </div>
+
+                <!-- Billing Details Section -->
+                <div class="checkoutForm">
+                    <div class="checkoutHeader">
+                        <p>Billing Details</p>
+                        
+                            <div class="deliverHeading">Deliver to: {{ user | capfirst }}</div>
+                        
+                            <form method="POST" id="online-form"class="online-form">
+                                {% csrf_token %}
+                                <div class="billingAddress">
+                                    <input type="text" id="billingAddressOnline" name="billingAddress" placeholder="Enter delivery address" >
+                                </div>
+
+                                <button id="online-button" class="placeOrderBtn" type="submit">PLACE ORDER</button>
+                            </form>
+                        
+                            <div class="checkout-form checkout-form-hidden">
+                        
+                            <form method="POST" id="address-form">
+                                {% csrf_token %}
+                                <div class="billingAddress">
+                                    <input type="text" id="billingAddressCheckout" name="billingAddress" placeholder="Enter delivery address" >
+                                </div>
+                                
+                            </form>
+
+                            <form method ="POST" id="checkout-form">
+                            {% csrf_token %}
+                          
+                                <div id="card-element"></div>
+                                <button id="checkout-button" type="submit">PLACE ORDER</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-    {% endblock %}
+    <script type="text/javascript">
+        document.getElementById("cod").checked = true;
+        const displayDiv = () => {            
+
+            let paymentItems = document.querySelector('.cardPayment')
+            let cardInfo = document.querySelector('.checkout-form')
+            let onlineInfo = document.querySelector('.online-form')
+            if (document.querySelector('#online').checked==true){
+                paymentItems.classList.remove('cardPayment-paypal-hidden')
+                cardInfo.classList.remove('checkout-form-hidden')
+                onlineInfo.classList.add('online-form-hidden')
+            }
+            else{
+                paymentItems.classList.add('cardPayment-paypal-hidden')
+                cardInfo.classList.add('checkout-form-hidden')
+                onlineInfo.classList.remove('online-form-hidden')
+            }
+    }
+    </script>
+
+    <script type="text/javascript">
+        let stripe = Stripe('{{ key }}');
+        let elements = stripe.elements();
+        let cardElement = elements.create('card');
         
+        cardElement.mount('#card-element');
+        let checkoutForm = document.getElementById('checkout-form');
+        const address = document.getElementById('billingAddressCheckout');
+        const addressForm = document.querySelector('#online-form');
+          
+        checkoutForm.addEventListener('submit', function(event)
+        {
+            event.preventDefault();
+    
+            stripe.createToken(cardElement).then(function(result){
+                if (result.error){
+                    console.log(result.error.message)
+                }
+                else {
+                    let formData = new FormData(checkoutForm);
+                    formData.set('billingAddress', address.value);
+                            // Convert formData to plain JavaScript object
+                    let formObject = Object.fromEntries(formData.entries());
+                    fetch('https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRFToken': '{{csrf_token}}',
+                        },
+                        body: JSON.stringify({
+                            'amount': {{ total_price}},
+                            'token': result.token.id,
+                            'billingAddress': formObject.billingAddress
+                        }),
+
+                    }).then(function(response){
+                        return response.json();
+                        
+                    }).then(function(data){
+                        stripe.redirectToCheckout({
+                            sessionId: data.id,
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        let onlineForm = document.getElementById('online-form')
+          
+        onlineForm.addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent default form submission behavior
+          const address = document.getElementById('billingAddressOnline')
+        
+          // Get form data
+          let formData = new FormData(onlineForm);
+          formData.set('billingAddress', address.value);
+          formData.set('buttonClicked', 'online');
+      
+          // Convert formData to plain JavaScript object
+          let formObject = Object.fromEntries(formData.entries());
+          fetch('https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+              billingAddress: formObject.billingAddress,
+            })
+          })
+          .then(response => {
+            response.json();
+            if (response.status === 200){
+                window.location.href = 'https://d2b5-119-160-35-62.ap.ngrok.io/orders/'
+
+            }        
+        }
+          )
+        });
+      </script>
+      
+    {% endblock %}

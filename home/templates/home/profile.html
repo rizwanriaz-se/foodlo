@@ -6,7 +6,7 @@
 <section class="changePassword">
         <div class="leftcp">
             <div class="border">
-                <p>Welcome {{user}}</p>
+                <p>Welcome {{ user | capfirst }}</p>
                 <button>Profile</button>
             </div>
         </div>
@@ -15,25 +15,8 @@
             <p class="profileDetails"><span>Username:</span> {{user}}</p>
             <p class="profileDetails"><span>Email:</span> {{user.email}}</p>
             <p class="profileDetails"><span>Date Joined:</span> {{user.date_joined}}</p>
+            <a href ='{% url "orderHistory" %}'>Order History</a>
+            <a href ='{% url "changePassword" %}'>Change password</a>
         </div>
-
-        <p class="rightcpheader">History</p>
-        
-        {% for item in history %}
-        <div class="rightcp">
-            <p class="profileDetails"><span>Item:</span> {{item.name}}</p>
-            <p class="profileDetails"><span>Quantity:</span> {{item.quantity}}</p>
-        </div>
-        {% endfor %}
-        
 </section>
-
-
-
-
-
-
-
-
-
 {% endblock %}

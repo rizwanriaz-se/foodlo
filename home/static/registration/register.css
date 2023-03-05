@@ -24,7 +24,6 @@
 
 #formHeading {
     width: 75%;
-    /* text-align: center; */
 }
 
 #formHeading span {
@@ -36,9 +35,8 @@
     border-bottom: 2px solid black;
     background-color: transparent;
     outline: none;
-    margin: 1.5rem auto;
+    margin: 0  auto 0.5rem auto;
     width: 100%;
-    display: flex;
     padding: 0.3rem;
 }
 
@@ -64,7 +62,7 @@
 
 .checkbox {
     width: 100%;
-    margin-bottom: 2rem ;
+    margin-bottom: 1rem ;
     margin-top: 1rem;
 }
 
@@ -86,7 +84,7 @@
     width: 100%;
     font-family: 'Poppins', sans-serif;
     text-align: center;
-    margin: 1rem 0;
+    margin: 0.7rem 0;
     background-color: #e7d3d3;
     border: none;
     border-radius: 0.5rem;

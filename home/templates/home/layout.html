@@ -15,10 +15,9 @@
     
       <link rel="stylesheet" href="{% static 'home/checkout.css' %}">  
       <link rel="stylesheet" href="{% static 'home/changepassword.css' %}">  
-      <link rel="stylesheet" href="{% static 'home/orders.css' %}">  
-    <link rel="stylesheet" href="{% static 'registration/login.css' %}">     
-<!--  <script src="{% static 'home/ajaxscripts.js' %}"></script> -->
-<!--   <script src="jquery-3.6.0.min.js"></script> -->
+      <link rel="stylesheet" href="{% static 'home/orders.css' %}">
+      <link rel="stylesheet" href="{% static 'home/history.css' %}">  
+      <link rel="stylesheet" href="{% static 'registration/login.css' %}">     
       <link rel="stylesheet" href="{% static 'home/products.css' %}">
     
       <link rel="stylesheet" href="{% static 'home/cart.css' %}">
@@ -42,14 +41,15 @@
     <!-- Mapbox End -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
+  <script src="https://js.stripe.com/v3/"></script>
+
 </head>
 <body>
 
     <!-- Hamburger -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <img src="/static/home/images/foodlo Logo/logo1.png" alt="foodlo logo" class="logo">
+            <img src="/static/home/images/foodlo Logo/logo1.png" alt="foodlo logo" class="logo" loading="lazy">
             <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <ul class="links">
@@ -111,7 +111,7 @@
     <footer class="footer">
         <div class="firstGridChild">
             <div class="logo">
-                <img src="{% static 'home/images/foodlo Logo/logo1.png' %}" alt="">
+                <img src="{% static 'home/images/foodlo Logo/logo1.png' %}" alt="" loading="lazy">
             </div>
             <div class="socials">
                 <a href="https://www.facebook.com/" target="_blank"><i class="socialIcon fa-brands fa-facebook-f"></i></a>
@@ -143,10 +143,6 @@
             <p>Copyright &copy; 2022 FoodLo pk | All Rights Reserved</p>
         </div>
     </footer>
-
-  <!-- In block body, don't write anything -->
-  <!-- Write only those parts in this file that would be same in all -->
-
 
 
 <script>
@@ -205,11 +201,6 @@
 
     $('.addQty').click(function(){
       var id = $(this).attr("pid").toString();
-      
-    //  var id = $(this).attr("pid");
-       
-      
-      console.log(id)
       $.ajax({
         type:"GET",
         url:"/pluscart",
@@ -217,14 +208,7 @@
           prodid:id
         },
         success: function(data){
-          console.log(id, typeof(id))
           id=Number(id)
-          console.log("success");
-//          console.log(qty[id])
-          
-          //qty.text(data.quantity);
-
-       //   document.getElementById("").innerText = data.quantity;
           document.getElementById(id).innerText = data.quantity;
           document.getElementById("amtnoshipping").innerText = data.amount;
           document.getElementById("amtwithshipping").innerText = data.totalamount;
@@ -234,8 +218,6 @@
 
       $('.subtractQty').click(function(){
       var id = $(this).attr("pid").toString();
-    //  var qty = $(".cartQty");
-      console.log(id)
       $.ajax({
         type:"GET",
         url:"/minuscart",
@@ -243,9 +225,6 @@
           prodid:id
         },
         success: function(data){
-          console.log("success");
-      //    qty.text(data.quantity);
-
           document.getElementById(id).innerText = data.quantity;  
           document.getElementById("amtnoshipping").innerText = data.amount;
           document.getElementById("amtwithshipping").innerText = data.totalamount;
@@ -289,44 +268,16 @@
       console.log(personEmail)
       $.ajax({
         type:"GET",
-        url:"mail",
+        url:"http://localhost:8000/mail",
         data:{
           email: personEmail
         },
         success: function(data){
           console.log("success")
-          
-        //  console.log(successMsg)
-        //  successMsg.textContent="Done"
-       //   alert("Email sent successfully")          
-      //  
-      //    console.log(successMsg.textContent)
-          $('.newsLetterRight').html("Email sent successfully!")
-        //  thanksMsg.html("Email sent successfully") 
-         // document.querySelector('emailSuccess').innerHTML= 'Email sent successfully!'
+          $('.newsLetterRight').html("Subscribed successfully!")
         }
       })
     })
-   /* 
-    $('.psbtn').click(function(){
-      var id = $('.psbtn_input').val();
-      console.log(id)
-      $.ajax({
-        type:"GET",
-        url:"/addtocart",
-        data:{
-          id:id,
-          foodname:foodname,
-          foodname:foodimg,
-          price:price,
-        },
-        success: function(data){
-          alert("item added")
-          console.log(data);
-        }
-      })
-    })
-    */
 </script>
 
 </body>

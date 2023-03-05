@@ -1,69 +1,53 @@
 {% extends "home/layout.html" %}
 {% load static %}
 
-<!-- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/home.css">
-    <link rel="stylesheet" href="../css/about.css">
-    <link rel="stylesheet" href="../css/login.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>foodlo</title>
-</head>
-<body>
--->
 {% block body %}
-  <!-- Registration Form -->
+  <!-- Login Form -->
         <div class="loginForm">
             <div class="loginFormContainer">
                 <div id="formHeading">
                     <h1><span>Lo</span>gin</h1>
                 </div>
-                    <div class="form">
+                    
+                <div class="form">
                     <form action="" method="post">
                       {% csrf_token %}
                       {% for fm in form %}
-                        <div>{{ fm }} <small>
-                          {{ fm.errors|striptags }}
-                        </small><br></div>
-                      {% endfor %}
-                      
-                      
-                      
-                        <!--<div class="input-field">
-                            <i class="fa-regular fa-envelope"></i>
-                            <input type="email" name="user-email" id="" placeholder="Enter your email" required>
-                        </div> 
                         <div class="input-field">
-                            <i class="fa-solid fa-lock"></i>
-                            <input type="password" name="user-password" id="user-pass" placeholder="Enter password" required>
-             <!--               <i class="fa-regular fa-eye" id="eye1" onclick="showPass()"></i>  -->
+                          {{ fm }} 
+                          <small>
+                            {{ fm.errors|striptags }}
+                          </small>
+                          <br>  
                         </div>
-                      
-                        <div class="loginFooter">
-                            <input id="loginNow" type="submit" value="Login Now" onclick="<!--window.location.reload()-->">
-                            <p id="registerLink">Not a member? <a href="{% url 'register' %}">Register Now</a></p>
-                        </div> 
-              {% if form.non_field_errors %}
-                        {% for error in form.non_field_errors %}
-                          <p>{{ error }}</p>
-                        {% endfor %}
+
+                      {% endfor %}
+                      {% if form.non_field_errors %}
+                        <div class="non-field-errors">
+                          {% for error in form.non_field_errors %}
+                            <p class="error-message">{{ error }}</p>
+                          {% endfor %}
+                        </div>
                       {% endif %}
+                      <p class="forgotPass">
+                        <a href="{% url 'password_reset' %}">Forgot password?</a>
+                      </p>
+                      
+                      <div class="loginFooter">
+                          <input id="loginNow" type="submit" value="Login Now">
+                          <p id="registerLink">
+                            Not a member? 
+                            <a href="{% url 'register' %}">
+                              Register Now
+                            </a>
+                          </p>
+                      </div> 
+
                     </form>
-                </div>
-            </div>
+
+                  </div>
+            
+              </div>
+            
         </div>
 {% endblock %}
-<!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../js/index.js"></script>
-    <script src="../js/showPass.js"></script>
-</body>
-</html>
--->

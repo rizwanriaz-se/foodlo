@@ -2,7 +2,7 @@
 
 .loginForm {
     background-color: #e7d3d3;
-    width: 100%;
+    width: 100%;    
     height: 70rem;
     display: flex;
     justify-content: center;
@@ -24,7 +24,6 @@
 
 #formHeading {
     width: 75%;
-    /* text-align: center; */
 }
 
 #formHeading span {
@@ -34,31 +33,44 @@
 .input-field {
     border: none;
     border-bottom: 2px solid black;
-    background-color: transparent;
+    background-color: white;
     outline: none;
     margin: 1.5rem auto;
     width: 100%;
     display: flex;
     padding: 0.3rem;
-}
-
-.input-field input {
-    background-color: transparent;
-    outline: none;
-    border: none;
-    width: 100%;
-    font-family: 'Poppins', sans-serif;
+    color:black
 }
 
 .input-field:is(:valid) {
     border-bottom: 2px solid #e7d3d3;
 }
 
+.inputError p {
+    font-size: 2px;
+    margin-top:30px;
+}
+
 .fa-user, .fa-envelope, .fa-lock {
     margin-right: 0.5rem;
 }
 
-#loginNow {
+.forgotPass a{
+    text-decoration: none;
+    color: rgb(126, 77, 47);
+    font-size:14px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .non-field-errors {
+    font-size:4px;
+  }
+
+  #loginNow {
     height: 4rem;
     width: 100%;
     font-family: 'Poppins', sans-serif;
@@ -69,7 +81,7 @@
     border-radius: 0.5rem;
     cursor: pointer;
 }
-
+     
 .loginFooter {
     font-size: 1.3rem;
 }

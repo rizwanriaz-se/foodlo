@@ -1,8 +1,15 @@
 .profileDetails {
     margin: 2rem 0rem 2rem 0rem;
+    
 }
 
 .profileDetails span {
     font-size: 2.2rem;
-    font-weight: bold;
+    font-weight: bold;    
+}
+
+.rightcp a {
+    color: black;
+    display: block;
+    padding-bottom:2rem;
 }

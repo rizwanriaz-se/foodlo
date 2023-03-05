@@ -3,6 +3,7 @@
 
 {% block body %}
 
+<!-- Orders Section -->
 <section class="changePassword">
         <div class="leftcp">
             <div class="border">
@@ -25,7 +26,7 @@
                   {% for prod in incheckout %}  
                   <div class="uoproductcard">
                         <div class="uoproductimage">
-                            <img src="{{ prod.foodimg }}" alt="">
+                            <img src="{{ prod.foodimg }}" alt="" loading="lazy">
                         </div>
                         <div class="uoproducttext">
                             <p class="uoprodname">Product: {{ prod.foodname}} </p>
@@ -43,4 +44,11 @@
             </section>
         </div>
     </section>
+    <script type="text/javascript">
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate',function (){
+            history.pushState(null, null, document.URL);
+        });
+    
+    </script>
     {% endblock %}

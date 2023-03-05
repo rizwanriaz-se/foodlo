@@ -1,35 +1,144 @@
-from django.urls import path, reverse_lazy
+from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
 
+
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("home/", views.home, name="home"),
-    path("register/", views.RegisterView.as_view(), name="register"),
-    path("accounts/login/",
-         auth_views.LoginView.as_view(template_name='registration/login.html',
-                                      authentication_form=LoginForm),
-         name="login"),
-    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("about/", views.about, name="about"),
-    path('productspecific/<int:pk>',
-         views.ProductSpecificView.as_view(),
-         name="productspecific"),
-    path("products/", views.ProductView.as_view(), name="products"),
-    path("products/<int:data>",
-         views.ProductView.as_view(),
-         name="productsfilter"),
-    path("cart/", views.cart, name="cart"),
-    path("emptycart/", views.emptycart, name="emptycart"),
-    path("mail/", views.send_mail, name="sendmail"),
-    path("pluscart/", views.pluscart),
-    path("minuscart/", views.minuscart),
-    path("removecart/", views.removecart),
-    path("addtocart/", views.addtocart, name="addtocart"),
-    path("checkout/", views.checkout.as_view(), name="checkout"),
-    path("profile/", views.profile, name="profile"),
-    path("orders/", views.OrdersView, name="orders")
+     path(
+          '',
+          views.home, 
+          name='home'
+          ),
+     path(
+          'home/',
+          views.home, 
+          name='home'
+          ),
+     path(
+          'register/',
+          views.RegisterView.as_view(), 
+          name='register'
+          ),
+     path(
+          'accounts/login/',
+          auth_views.LoginView.as_view(
+               template_name='registration/login.html',
+               authentication_form=LoginForm
+               ),
+          name='login'
+     ),
+     path(
+          'accounts/logout/', 
+          auth_views.LogoutView.as_view(), 
+          name='logout'
+     ),
+     path(
+          'about/', 
+          views.about, 
+          name='about'
+     ),
+     path(
+          'productspecific/<int:pk>', 
+          views.ProductSpecificView.as_view(), 
+          name='productspecific'
+     ),
+     path(
+          'products/', 
+          views.ProductView.as_view(), 
+          name='products'
+     ),
+     path(
+         'products/<int:data>', 
+         views.ProductView.as_view(), 
+         name='productsfilter'
+     ),
+     path(
+          'cart/', 
+          views.cart, 
+          name='cart'
+          ),
+     path(
+          'changePassword/', 
+          views.changePassword, 
+          name='changePassword'
+     ),
+     path(
+          'emptycart/',
+          views.emptycart, 
+          name='emptycart'
+     ),
+     path(
+          'mail/',
+          views.send_mail, 
+          name='sendmail'
+     ),
+     path(
+          'webhook/',
+          views.stripe_webhook, 
+          name='stripe_webhook'
+     ),
+     path(
+          'pluscart/', 
+          views.pluscart
+     ),
+     path(
+         'password_reset/', 
+          views.password_reset, 
+          name='password_reset'
+     ),
+     path(
+          'password_reset/done/', 
+          auth_views.PasswordResetDoneView.as_view(
+               template_name='registration/password_reset_done.html'
+          ), 
+          name='password_reset_done'
+     ),
+     path(
+          'reset/<uidb64>/<token>/', 
+          views.password_reset_confirm, 
+          name='password_reset_confirm'
+     ),
+     path(
+         'reset/done/', 
+          auth_views.PasswordResetCompleteView.as_view(
+               template_name='registration/password_reset_complete.html'
+          ), 
+          name='password_reset_complete'
+     ),
+     path(
+          'minuscart/', 
+          views.minuscart
+     ),
+     path(
+          'removecart/',  
+          views.removecart
+     ),
+     path(
+         'addtocart/', 
+          views.addtocart, 
+          name='addtocart'
+     ),
+     path(
+          'checkout/', 
+          views.checkout.as_view(), 
+          name='checkout'
+     ),
+     path(
+         'profile/', 
+          views.profile, 
+          name='profile'
+     ),
+     path(
+          'orderHistory/', 
+          views.history, 
+          name='orderHistory'
+     ),
+     path(
+          'orders/', 
+          views.OrdersView, 
+          name='orders'
+     )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
