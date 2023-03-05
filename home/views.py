@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 import json
 import stripe
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
@@ -14,6 +16,14 @@ from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+# Get the directory containing this script (settings.py)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct path to .env file relative to this script
+env_path = os.path.join(base_dir, '..', '.env')
+
+# Load environment variables from .env file
+load_dotenv(env_path)
 
 #API KEY for connecting to stripe account
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -289,7 +299,7 @@ class checkout(View):
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types = ['card'],
                 line_items = [{
-                                'price': 'price_1MecRdF9QX3VoyirciBSqfeI',
+                                'price': os.environ.get('PRICE'),
                                 'quantity': 1
                             }],
                 mode=  'payment',
@@ -325,7 +335,7 @@ class checkout(View):
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.headers.get('STRIPE_SIGNATURE')
-    endpoint_secret = 'we_1MgfPxF9QX3VoyirAAklkuuA'
+    endpoint_secret = os.environ.get('ENDPOINT_SECRET')
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except ValueError as e:

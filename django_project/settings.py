@@ -1,4 +1,15 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Get the directory containing this script (settings.py)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct path to .env file relative to this script
+env_path = os.path.join(base_dir, '..', '.env')
+
+# Load environment variables from .env file
+load_dotenv(env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l36ov35x6^#(b3v0zf0up_9p_wz=5)f&mzgczn9+qa63fyrv5_'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -147,9 +158,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = 'foodlo.mail.pk@gmail.com'
-EMAIL_HOST_PASSWORD = 'qygvsdyeycfnwbiy'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51Mdt3FF9QX3VoyirhFM8cYhWfZx7akc5D6EZAh4mFEd0U6EroS3rrIahSPMOmQaULbgAHzxgNiuFBiq7mLNqi3Qm00OvGbIQsc'
-STRIPE_SECRET_KEY = 'sk_test_51Mdt3FF9QX3VoyirUiuntukERKiBvBATyqfCrpH3aQu5Py6qECxHHpjG2TA36pBbBPni63gBywHj6Bx7PUqg2P72002V3JuyHY'
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
