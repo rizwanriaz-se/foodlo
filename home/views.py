@@ -412,7 +412,8 @@ def OrdersView(request):
         #Send email to user about ordder confirmation
         res = sm(
              subject="Order Info",
-             message=(f"You order {recent_order} has been confirmed. It contains {str([p['foodname'] for p in request.session['cartdata']])}"),
+                     message=('You order has been confirmed.\nOrder ID: {}\nDelivery Address: {}\nIt contains:\n\t{}'.format(recent_order,address, "".join("{} - {}\n".format(i["quantity"], i["foodname"]) for i in cartdata))),
+
             
              from_email='foodlo.mail.pk@gmail.com',
              recipient_list=[user.email],
