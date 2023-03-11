@@ -14,7 +14,7 @@ class CategoryModelAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
     list_display = [
-        'id', 'foodcategory', 'foodname', 'foodimg', 'fooddesc', 'price'
+        'id', 'foodcategory', 'foodname', 'foodimg', 'fooddesc', 'price', 'stripe_price_id'
         ]
   
 #Order table admin

@@ -23,7 +23,8 @@ class Product(models.Model):
     foodimg = models.ImageField()
     fooddesc = models.TextField(max_length=200)
     price = models.PositiveIntegerField()
-
+    stripe_price_id = models.CharField(max_length=64)
+    
     def __str__(self):
         return self.foodname
 

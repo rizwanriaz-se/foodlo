@@ -146,7 +146,7 @@
                     formData.set('billingAddress', address.value);
                             // Convert formData to plain JavaScript object
                     let formObject = Object.fromEntries(formData.entries());
-                    fetch('https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', {
+                    fetch('http://localhost:8000/checkout/', {
                         method: 'POST',
                         headers: {
                             'Content-Type':'application/json',
@@ -175,34 +175,33 @@
         let onlineForm = document.getElementById('online-form')
           
         onlineForm.addEventListener('submit', function(event) {
-          event.preventDefault(); // Prevent default form submission behavior
-          const address = document.getElementById('billingAddressOnline')
+            event.preventDefault(); // Prevent default form submission behavior
+            const address = document.getElementById('billingAddressOnline')
         
-          // Get form data
-          let formData = new FormData(onlineForm);
-          formData.set('billingAddress', address.value);
-          formData.set('buttonClicked', 'online');
+            // Get form data
+            let formData = new FormData(onlineForm);
+            formData.set('billingAddress', address.value);
       
-          // Convert formData to plain JavaScript object
-          let formObject = Object.fromEntries(formData.entries());
-          fetch('https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({
-              billingAddress: formObject.billingAddress,
+            // Convert formData to plain JavaScript object
+            let formObject = Object.fromEntries(formData.entries());
+            fetch('http://localhost:8000/checkout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    'billingAddress': formObject.billingAddress,
+                })
             })
-          })
-          .then(response => {
-            response.json();
-            if (response.status === 200){
-                window.location.href = 'https://d2b5-119-160-35-62.ap.ngrok.io/orders/'
-
-            }        
-        }
-          )
+            .then(response => {
+                if (response.status === 200){
+                    window.location.href = 'http://localhost:8000/orders/'
+                }        
+            })
+            .catch(error => {
+                console.error(error);
+            });
         });
       </script>
       

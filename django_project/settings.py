@@ -24,12 +24,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
-CSRF_TRUSTED_ORIGINS = ['https://d2b5-119-160-35-62.ap.ngrok.io']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+#CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000']
 
 # Application definition
 
 INSTALLED_APPS = [
     'home',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,23 +80,6 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': #'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': #'django.db.backends.postgresql',
-#        'NAME': 'edsukixe',
-#        'USER': 'edsukixe',
-#        'PASSWORD': #'fAli3e1Blr0getrq5dDOSfNQ2B_Rmjuz',
-#        'HOST': #'castor.db.elephantsql.com',
-#        'PORT': 5432
-#    }
-#}
 
 DATABASES = {
     'default': {
@@ -146,6 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

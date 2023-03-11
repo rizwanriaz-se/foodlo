@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 import os
 from dotenv import load_dotenv
 import json
@@ -68,7 +69,7 @@ class RegisterView(View):
             login(request, user)
             request.session.setdefault('cartdata',[])
             
-            return redirect('home') # replace 'homepage' with the name of your homepage URL
+            return redirect('home')
         return render(request, 'registration/register.html', {'form': form})
 
 
@@ -115,7 +116,7 @@ def password_reset(request):
 def password_reset_confirm(request, uidb64, token):
     return auth_views.PasswordResetConfirmView.as_view(
         template_name='registration/password_reset_confirm.html',
-        success_url='https://d2b5-119-160-35-62.ap.ngrok.io/reset/done',
+        success_url='http://localhost:8000/reset/done',
         post_reset_login=False,
         post_reset_login_backend='django.contrib.auth.backends.ModelBackend'
     )(request, uidb64=uidb64, token=token)
@@ -283,28 +284,44 @@ def removecart(request):
 
 
 #View to handle checkout page
-@method_decorator(login_required, name='dispatch')
+@method_decorator([csrf_exempt, login_required], name='dispatch')
 class checkout(View):
 
     #For submitting checkout form
     def post(self,request):
         user=request.user
         body_unicode = request.body.decode('utf-8')
+        
         body = json.loads(body_unicode)
         billing_address = body['billingAddress']
         request.session['order_address'] = billing_address
         order = Order.objects.create(user=user)
         request.session['order_id'] = order.id
         try:
+            lineItems = []
+            cartdata = request.session.get('cartdata',[])
+            for i in cartdata:
+                id = i['id']
+                quantity = i['quantity']
+                product = Product.objects.get(id=id)
+                stripe_price_id = product.stripe_price_id
+                lineItems.append({'price':stripe_price_id, 'quantity':quantity})
+
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types = ['card'],
-                line_items = [{
-                                'price': os.environ.get('PRICE'),
-                                'quantity': 1
-                            }],
+                shipping_options=[
+                    {
+                        "shipping_rate_data": {
+                            "type": "fixed_amount",
+                            "fixed_amount": {"amount": 200, "currency": "usd"},
+                            "display_name": "Delivery Charges",
+                        },
+                    },
+                  ],
+                line_items = lineItems,
                 mode=  'payment',
-                success_url='https://d2b5-119-160-35-62.ap.ngrok.io/orders/',
-                cancel_url='https://d2b5-119-160-35-62.ap.ngrok.io/checkout/', 
+                success_url='http://localhost:8000/orders/',
+                cancel_url='http://localhost:8000/checkout/', 
                 metadata={
                      'address': billing_address,
                  }
